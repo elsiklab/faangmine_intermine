@@ -1,0 +1,7 @@
+<project name="faangmine-postprocess" default="default" basedir=".">
+
+  <description>perform post processing for faangmine</description>
+
+  <import file="../../imbuild/postprocess.xml"/>
+
+</project>

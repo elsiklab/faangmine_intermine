@@ -1,0 +1,7 @@
+<project name="bovineminev1.5-postprocess" default="default" basedir=".">
+
+  <description>perform post processing for bovineminev1.5</description>
+
+  <import file="../../imbuild/postprocess.xml"/>
+
+</project>
