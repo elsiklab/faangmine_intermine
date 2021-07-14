@@ -153,7 +153,7 @@ public class KeggMetadataConverter extends BioFileConverter
              try {
                 store(item);	
             } catch(Exception e) {
-                System.out.println("Error while storing ExpressionMetadata item: " + item + "\nStacktrace: " + e);
+                System.out.println("Error while storing Experiment item: " + item + "\nStacktrace: " + e);
             }
 
        }

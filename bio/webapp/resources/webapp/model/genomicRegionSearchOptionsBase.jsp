@@ -29,7 +29,6 @@
 
         <link type="text/css" rel="stylesheet" href="model/jquery_ui/css/smoothness/jquery-ui-1.8.13.custom.css"/>
 
-
         <script type="text/javascript">
             //liftOver url, set it before loading "genomic_region_search_options_metabolicmine.js"
             var liftOverUrl = "${WEB_PROPERTIES['genomicRegionSearch.liftOver.url']}";
@@ -61,6 +60,11 @@
         <script type="text/javascript" src="model/genomic_region_search/genomic_region_search_options_base.js"></script>
         <script type="text/javascript" src="model/genomic_region_search/${optionsJavascript}.js"></script>
         <script type="text/javascript" src="model/jquery_ui/jquery-ui-1.8.13.custom.min.js"></script>
+
+        <!--  script and css for jsTree -->
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.9/themes/default/style.min.css"/>
+        <link type="text/css" rel="stylesheet" href="model/css/genomic_region_search_extra.css"/>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.9/jstree.min.js"></script>
 
         <div id="grs-options-body" align="center" style="padding-top: 20px;">
             <im:boxarea titleKey="genomicRegionSearch.title" stylename="plainbox" fixedWidth="85%" titleStyle="font-size: 1.2em; text-align: center;">

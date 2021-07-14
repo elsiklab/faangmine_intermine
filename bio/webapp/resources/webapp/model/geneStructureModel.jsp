@@ -44,7 +44,12 @@
 var pid = '<c:out value="${gene.primaryIdentifier}"/>';
 
 var organismMap = {
-    "B. taurus": "22875"
+    //"B. taurus": "22875"
+    "B. Taurus": "21",
+    "C. hircus": "2236",
+    "G. gallus": "32146",
+    "O. aries": "35257",
+    "S. scrofa": "46427"
 };
 
 // Require bare bones jbrowse components without using the main browser object
@@ -79,7 +84,7 @@ require({
    'JBrowse/Store/Sequence/StaticChunked'
 ],
 function (cookie,dom,domConstruct,domStyle,domClass,Browser,HTMLFeatures,NCList,SimpleFeature,Layout,StaticChunkedSequence) {
-   var bovinemine = new intermine.Service({root: "http://bovinegenome.org/bovinemine"});
+   var faangmine = new intermine.Service({root: "http://128.206.116.34:8080/faangmine/"});
    var query = {
        from: 'Gene',
        select: [
@@ -120,7 +125,8 @@ function (cookie,dom,domConstruct,domStyle,domClass,Browser,HTMLFeatures,NCList,
        if (organism in organismMap) {
           trackConfig.onClick = {
               "label": "Feature name {name}\nFeature start {start}\nFeature end {end}",
-              "url": "http://bovinegenome.org/Apollo2/" + organismMap[organism] + "/jbrowse/index.html?loc={seq}:{start}..{end}",
+              //"url": "http://bovinegenome.org/Apollo2/" + organismMap[organism] + "/jbrowse/index.html?loc={seq}:{start}..{end}",
+              "url": "http://128.206.116.5:8080/apollo-lsaa/" + organismMap[organism] + "/jbrowse/index.html?loc={seq}:{start}..{end}",
               "action": "newWindow"
           }
        }
@@ -183,7 +189,7 @@ function (cookie,dom,domConstruct,domStyle,domClass,Browser,HTMLFeatures,NCList,
        }
        track.updateStaticElements({x:0,y:0,width:2000,height:height});
    }
-   bovinemine.rows(query).then(function(rows) {
+   faangmine.rows(query).then(function(rows) {
        var features={};
        rows.forEach(function printRow(row) {
            var transcript=row[6];

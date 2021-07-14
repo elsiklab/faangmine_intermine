@@ -1,7 +1,7 @@
 package org.intermine.bio.dataconversion;
 
 /*
- * Copyright (C) 2002-2017 FlyMine
+ * Copyright (C) 2002-2020 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -14,15 +14,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+//import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.intermine.dataconversion.ItemWriter;
@@ -30,6 +31,7 @@ import org.intermine.metadata.Model;
 import org.intermine.objectstore.ObjectStoreException;
 import org.intermine.util.FormattedTextParser;
 import org.intermine.xml.full.Item;
+//import org.intermine.metadata.StringUtil;
 
 /**
  * Load disease data from OMIM and relationship to genes, publications and SNPs.
@@ -42,8 +44,8 @@ public class OmimConverter extends BioDirectoryConverter
     private static final Logger LOG = Logger.getLogger(OmimConverter.class);
 
     private static final String DATASET_TITLE = "OMIM diseases";
-    private static final String DATA_SOURCE_NAME = "Online Mendelian Inheritance in Man";
-    private static final String TAXON_ID = "9606";
+    private static final String DATA_SOURCE_NAME = "OMIM";
+    private static final String TAXON_ID = "9606"; // human
     private static final String OMIM_PREFIX = "OMIM:";
 
     private Map<String, String> genes = new HashMap<String, String>();
@@ -51,10 +53,10 @@ public class OmimConverter extends BioDirectoryConverter
     private Map<String, Item> diseases = new HashMap<String, Item>();
 
     private String organism;
-    private IdResolver rslv;
+    protected IdResolver rslv = null;
     private static final String OMIM_TXT_FILE = "mimTitles.txt";
     private static final String MORBIDMAP_FILE = "morbidmap.txt";
-    private static final String PUBMED_FILE = "pubmed_cited";
+    private static final String PUBMED_FILE = "pubmed_cited.txt";
     // An asterisk (*) before an entry number indicates a gene.
     private static final String GENE_ENTRY = "Asterisk";
     private static final String GENE_PHENOTYPE_ENTRY = "Plus";
@@ -67,9 +69,6 @@ public class OmimConverter extends BioDirectoryConverter
      */
     public OmimConverter(ItemWriter writer, Model model) {
         super(writer, model, DATA_SOURCE_NAME, DATASET_TITLE);
-        if (rslv == null) {
-            rslv = IdResolverService.getIdResolverByOrganism(Collections.singleton(TAXON_ID));
-        }
     }
 
     @Override
@@ -81,11 +80,20 @@ public class OmimConverter extends BioDirectoryConverter
      * {@inheritDoc}
      */
     public void process(File dataDir) throws Exception {
+        if (rslv == null) {
+            rslv = IdResolverService.getIdResolverByOrganism(TAXON_ID);
+            // below was testing the id resolver thingy on a list of taxon ids:
+            //String testTaxonIds = "9913 9606 10090 10116 9940 9823 9031 9615 9685 9796";
+	    //Set<String> taxonIds = new HashSet<String>(Arrays.asList(StringUtil.split(testTaxonIds, " ")));
+	    //rslv = IdResolverService.getIdResolverByOrganism(taxonIds);
+	    //throw new RuntimeException("Resolver taxons and class names:  " + rslv.getTaxonsAndClassNames());
+        }
         Map<String, File> files = readFilesInDir(dataDir);
 
         organism = getOrganism(TAXON_ID);
 
         String[] requiredFiles = new String[] {OMIM_TXT_FILE, MORBIDMAP_FILE, PUBMED_FILE};
+        //String[] requiredFiles = new String[] {OMIM_TXT_FILE, MORBIDMAP_FILE}; // testing without pubmed_cited
         Set<String> missingFiles = new HashSet<String>();
         for (String requiredFile : requiredFiles) {
             if (!files.containsKey(requiredFile)) {
@@ -141,7 +149,7 @@ public class OmimConverter extends BioDirectoryConverter
                 disease.setAttribute("name", names[0]);
             }
             for (int i = 1; i < names.length; i++) {
-                createSynonym(disease.getIdentifier(), names[i], true);
+                createSynonym(disease.getIdentifier(), names[i].trim(), true);
             }
 
         }
@@ -149,12 +157,31 @@ public class OmimConverter extends BioDirectoryConverter
 
     private void processMorbidMapFile(Reader reader) throws IOException, ObjectStoreException {
         BufferedReader br = new BufferedReader(reader);
-        String line = null;
         // find the OMIM ID. OMIM identifiers are 6 digits
         Pattern matchMajorDiseaseNumber = Pattern.compile("(\\d{6})");
-        final String delim = "\\(3\\)";
-        while ((line = br.readLine()) != null) {
-            Matcher diseaseMatcher = matchMajorDiseaseNumber.matcher(line);
+
+        // don't want the header
+        String line = br.readLine();
+        while (line != null) {
+            line = br.readLine();
+
+            // there are blank lines to skip
+            if (StringUtils.isEmpty(line) || line.startsWith("#")) {
+                continue;
+            }
+
+            // split the line by the number present (2)
+            // the line isn't space or tab delimited properly, hence this weirdness
+            String[] bits = line.split("\\s\\(\\d\\)\\s");
+            if (bits.length != 2) {
+                LOG.error(" bad line: '" + line + "' ");
+                continue;
+            }
+
+            String unformattedDiseaseString = bits[0];
+            String unformattedGeneSymbols = bits[1].trim();
+
+            Matcher diseaseMatcher = matchMajorDiseaseNumber.matcher(unformattedDiseaseString);
             String mimNumber = null;
             if (diseaseMatcher.find()) {
                 mimNumber = diseaseMatcher.group(1);
@@ -171,17 +198,9 @@ public class OmimConverter extends BioDirectoryConverter
                 // relying on our diseases map to be populated by the processOmimTxtFile() method
                 continue;
             }
-            String symbols = null;
-            String[] firstBits = line.split(delim);
-            if (firstBits.length != 2) {
-                // throw exception here?
-                continue;
-            }
-            symbols = firstBits[1].trim();
-            // remove the trailing columns
-            String[] bits = symbols.split("(\\t)|(\\s\\s)");
-            String chompedSymbols = bits[0];
-            for (String geneSymbol : chompedSymbols.split(",")) {
+            String[] lineColumns = unformattedGeneSymbols.split("\\s+");
+            String geneSymbols = lineColumns[0];
+            for (String geneSymbol : geneSymbols.split(",")) {
                 String geneRefId = getGene(geneSymbol.trim());
                 if (geneRefId != null) {
                     disease.addToCollection("genes", geneRefId);
@@ -215,6 +234,7 @@ public class OmimConverter extends BioDirectoryConverter
 
         if (disease == null) {
             disease = createItem("Disease");
+            // Newer version had "primaryIdentifier" below but for now we're using "identifier" as in 1.8.5
             disease.setAttribute("identifier", OMIM_PREFIX + mimNumber);
             diseases.put(mimNumber, disease);
         }
@@ -234,8 +254,10 @@ public class OmimConverter extends BioDirectoryConverter
     }
 
     private String getGene(String geneSymbol) throws ObjectStoreException {
+        String[] symbols = geneSymbol.split(" ");
+        String symbol = symbols[0];
         String refId = null;
-        String entrezGeneNumber = resolveGene(geneSymbol.trim());
+        String entrezGeneNumber = resolveGene(symbol);
         if (StringUtils.isNotEmpty(entrezGeneNumber)) {
             refId = genes.get(entrezGeneNumber);
             if (refId == null) {
@@ -251,17 +273,23 @@ public class OmimConverter extends BioDirectoryConverter
     }
 
     private String resolveGene(String identifier) {
-        String id = identifier;
-        if (rslv != null && rslv.hasTaxon(TAXON_ID)) {
-            int resCount = rslv.countResolutions(TAXON_ID, identifier);
-            if (resCount != 1) {
-                LOG.info("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
-                        + identifier + " count: " + resCount + " Human identifier: "
-                        + rslv.resolveId(TAXON_ID, identifier));
-                return null;
-            }
-            id = rslv.resolveId(TAXON_ID, identifier).iterator().next();
+        if (rslv == null) {
+            throw new RuntimeException("Resolver is null for identifier " + identifier);
         }
-        return id;
+        if (!rslv.hasTaxon(TAXON_ID)) {
+            System.out.println("resolveGene() failed for identifier: " + identifier + " and taxon ID: " + TAXON_ID);
+            throw new RuntimeException("Resolver cannot find taxon ID. " + rslv.getTaxonsAndClassNames());
+        }
+//        if (rslv == null || !rslv.hasTaxon(TAXON_ID)) {
+//            throw new RuntimeException("Resolver is empty for identifier " + identifier);
+//        }
+        int resCount = rslv.countResolutions(TAXON_ID, identifier);
+        if (resCount != 1) {
+            LOG.info("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
+                    + identifier + " count: " + resCount + " Human identifier: "
+                    + rslv.resolveId(TAXON_ID, identifier));
+            return null;
+        }
+        return rslv.resolveId(TAXON_ID, identifier).iterator().next();
     }
 }

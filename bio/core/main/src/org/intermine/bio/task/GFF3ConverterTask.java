@@ -179,7 +179,7 @@ public class GFF3ConverterTask extends Task
             throw new BuildException("seqClsName attribute not set");
         }
         if (seqAssemblyVersion == null) {
-            throw new BuildException("seqClsName attribute not set");
+            throw new BuildException("seqAssemblyVersion attribute not set");
         }
         if (orgTaxonId == null) {
             throw new BuildException("orgTaxonId attribute not set");

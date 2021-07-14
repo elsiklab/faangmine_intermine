@@ -18,6 +18,7 @@ five_prime_UTR
 forward_primer
 gene
 golden_path_fragment
+histone_binding_site
 intergenic_region
 intron
 mRNA
@@ -45,6 +46,8 @@ transcript
 transposable_element
 transposable_element_insertion_site
 UTR
+vault_RNA
+Y_RNA
 
 # many-to-many part_of relationships (default is many-to-one)
 exon.transcript

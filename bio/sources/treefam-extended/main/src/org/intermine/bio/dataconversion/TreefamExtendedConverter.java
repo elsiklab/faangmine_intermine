@@ -68,6 +68,7 @@ public class TreefamExtendedConverter extends BioFileConverter
         organismMap.put("Equus caballus", "9796");
         organismMap.put("Gallus gallus", "9031");
         organismMap.put("Sus scrofa", "9823");
+        organismMap.put("Felis catus", "9685");
     }
 
     /**
@@ -170,6 +171,9 @@ public class TreefamExtendedConverter extends BioFileConverter
         String refId = genes.get(identifier);
         if (refId == null) {
             String taxonId = organismMap.get(organismName);
+            if (taxonId == null) {
+                throw new RuntimeException("ERROR: taxonId was null. Identifier: " + identifier + ", organismName: " + organismName);
+            }
             String fieldName = getConfig(taxonId);
             if (fieldName == null) {
                 throw new IllegalArgumentException("no config found");

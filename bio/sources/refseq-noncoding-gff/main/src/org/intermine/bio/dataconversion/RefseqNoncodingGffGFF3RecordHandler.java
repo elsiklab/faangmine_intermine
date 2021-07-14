@@ -33,7 +33,7 @@ import java.util.Map.Entry;
  * A converter/retriever for the RefseqNoncodingGff dataset via GFF files.
  */
 
-public class RefseqNoncodingGffGFF3RecordHandler extends GFF3RecordHandler
+public class RefseqNoncodingGffGFF3RecordHandler extends AnalysisGFF3RecordHandler
 {
 
     /**
@@ -60,6 +60,9 @@ public class RefseqNoncodingGffGFF3RecordHandler extends GFF3RecordHandler
      */
     @Override
     public void process(GFF3Record record) {
+        // Call parent to handle analysis accessions
+        super.process(record);
+
         Item feature = getFeature();
         String clsName = feature.getClassName();
         feature.setAttribute("source", record.getSource());
@@ -144,12 +147,12 @@ public class RefseqNoncodingGffGFF3RecordHandler extends GFF3RecordHandler
                         if( ref.startsWith("NCBI_Gene") ) {
                             feature.setAttribute( "primaryIdentifier", ref.replace("NCBI_Gene:", "") );
                         }
-                        if( ref.startsWith("BGD:") ) {
-                            // treating as xRef
-                            // TODO: Verify this assumption
-                            String xRefValue = ref.replace("BGD:", "") +  ":btau_OGSv2";
-                            setCrossReference(xRefValue);
-                        }
+                        // in the following case, don't store as xref - just ignore:
+                        //if( ref.startsWith("BGD:") ) {
+                        //    // treating as xRef
+                        //    String xRefValue = ref.replace("BGD:", "") +  ":btau_OGSv2";
+                        //    setCrossReference(xRefValue);
+                        //}
                     }
                 }
             }

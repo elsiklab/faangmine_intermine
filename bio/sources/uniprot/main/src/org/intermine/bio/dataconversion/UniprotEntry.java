@@ -721,6 +721,11 @@ public class UniprotEntry
         this.primaryIdentifier = primaryIdentifier;
     }
 
+    @Override
+    public String toString() {
+        return "(" + name + ", " + primaryIdentifier + ", " + primaryAccession + ")";
+    }
+
     // ============== genes =========================
 
     /**

@@ -27,6 +27,7 @@ import org.intermine.metadata.Model;
 import org.intermine.model.bio.BioEntity;
 import org.intermine.model.bio.Chromosome;
 import org.intermine.model.bio.Location;
+import org.intermine.model.bio.RepeatRegion;
 import org.intermine.model.bio.SequenceFeature;
 import org.intermine.model.bio.SNP;
 import org.intermine.model.bio.Indel;
@@ -383,8 +384,9 @@ public class CalculateLocations
 
         while (resIter.hasNext()) {
             ResultsRow<?> rr = (ResultsRow<?>) resIter.next();
-            if (rr.get(1) instanceof SNP || rr.get(1) instanceof Indel) {
+            if (rr.get(1) instanceof SNP || rr.get(1) instanceof Indel || rr.get(1) instanceof RepeatRegion) {
                 // ignoring result entries of type SNP and Indel
+                // as of Nov 2020 also ignore RepeatRegion (takes too long, same as SNP/Indel)
                 continue;
             }
             Integer chrId = (Integer) rr.get(0);

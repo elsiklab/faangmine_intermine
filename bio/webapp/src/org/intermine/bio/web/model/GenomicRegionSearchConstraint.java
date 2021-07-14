@@ -23,6 +23,8 @@ public class GenomicRegionSearchConstraint
 {
     private String orgName = null;
     private String chrAssembly = null;
+    private List<String> categories = null;
+    private List<String> analyses = null;
     private Set<Class<?>> featureTypes = null;
     private List<GenomicRegion> genomicRegionList = null;
     private int extendedRegionSize = 0;
@@ -49,6 +51,22 @@ public class GenomicRegionSearchConstraint
     }
      public void setChrAssembly(String chrAssembly) {
         this.chrAssembly = chrAssembly;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public List<String> getAnalyses() {
+        return analyses;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    public void setAnalyses(List<String> analyses) {
+        this.analyses = analyses;
     }
 
     /**
@@ -105,21 +123,45 @@ public class GenomicRegionSearchConstraint
     }
 
     /**
+     * @return whether or not this search includes project categories
+     */
+    public boolean hasProjectCategories() {
+        // One special case of non-project-category
+        // anything else besides that must be a project category
+        return ((categories != null) && (categories.size() > 1));
+    } 
+
+    /**
+     * @return whether or not this search includes analyses
+     */
+    public boolean hasAnalyses() {
+        // Note: assumes that categories will not be null as long as
+        // analyses not null
+        return ((analyses != null) && (analyses.size() > 0));
+    }
+
+    /**
      * @param obj a GenomicRegionSearchConstraint object
      * @return boolean
      */
     @Override
     public boolean equals(Object obj) {
+        boolean retVal = false;
+
         if (obj instanceof GenomicRegionSearchConstraint) {
             GenomicRegionSearchConstraint c = (GenomicRegionSearchConstraint) obj;
-            return (extendedRegionSize == c.getExtendedRegionSize()
+            retVal = (extendedRegionSize == c.getExtendedRegionSize()
                     && genomicRegionList.equals(c.getGenomicRegionList())
                     && featureTypes.equals(c.getFeatureTypes())
                     && orgName.equals(c.getOrgName())
                     && chrAssembly.equals(c.getChrAssembly())
                     && strandSpecific == c.getStrandSpecific());
+            if (hasAnalyses()) {
+                retVal = retVal && categories.equals(c.getCategories())
+                    && analyses.equals(c.getAnalyses());
+            }
         }
-        return false;
+        return retVal;
     }
 
     /**
@@ -127,8 +169,14 @@ public class GenomicRegionSearchConstraint
      */
     @Override
     public int hashCode() {
-        return extendedRegionSize + genomicRegionList.hashCode() + featureTypes.hashCode()
+        int hash = extendedRegionSize + genomicRegionList.hashCode() + featureTypes.hashCode()
             + orgName.hashCode() + chrAssembly.hashCode();
+
+        if (hasAnalyses()) {
+            hash += categories.hashCode() + analyses.hashCode();
+        }
+
+        return hash;
     }
 
 }

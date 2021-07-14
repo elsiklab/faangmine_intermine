@@ -393,18 +393,20 @@ public class TreefamConverter extends BioFileConverter
         return cleanSymbol;
     }
 
+    // NEW: Not using ID Resolver
+    // Log any genes that would have failed to resolve but always return the identifier itself
     private String resolveGene(String taxonId, String identifier, String symbol) {
         String id = identifier;
         if (rslv != null && rslv.hasTaxon(taxonId)) {
             int resCount = rslv.countResolutions(taxonId, identifier);
             if (resCount != 1) {
                 // failed to resolve. try again!
-                LOG.info("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
+                System.out.println("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
                          + identifier + " count: " + resCount + " Human identifier: "
                          + identifier);
-                return null;
+                //return null;
             }
-            id = rslv.resolveId(taxonId, identifier).iterator().next();
+            //id = rslv.resolveId(taxonId, identifier).iterator().next();
         }
         return id;
     }

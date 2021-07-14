@@ -1,7 +1,7 @@
 package org.intermine.bio.dataconversion;
 
 /*
- * Copyright (C) 2002-2017 FlyMine
+ * Copyright (C) 2002-2020 FlyMine
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -47,6 +47,7 @@ import org.intermine.objectstore.query.Query;
 import org.intermine.objectstore.query.QueryClass;
 import org.intermine.objectstore.query.QueryField;
 import org.intermine.objectstore.query.SimpleConstraint;
+import org.intermine.util.PropertiesUtil;
 import org.intermine.util.SAXParser;
 import org.intermine.xml.full.FullRenderer;
 import org.intermine.xml.full.Item;
@@ -82,10 +83,12 @@ public class EntrezPublicationsRetriever
     // summary
     protected static final String ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/"
             + "eutils/esummary.fcgi";
+    protected static final String propKey = "ncbi.eutils.apiKey";
     // number of records to retrieve per request
     protected static final int BATCH_SIZE = 400;
     // number of times to try the same batch from the server
     private static final int MAX_TRIES = 5;
+    private static final int POSTGRES_INDEX_SIZE = 2712;
     private String osAlias = null, outputFile = null;
     private Set<Integer> seenPubMeds = new HashSet<Integer>();
     private Map<String, Item> authorMap = new HashMap<String, Item>();
@@ -378,7 +381,10 @@ public class EntrezPublicationsRetriever
         // con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
-        String urlParameters = "tool=intermine&db=pubmed&rettype=abstract&retmode=xml&id="
+        // New: include API key in lookups
+        // API Key stored in intermine properties file
+        String urlParameters = "tool=intermine&db=pubmed&rettype=abstract&retmode=xml"
+                + "&api_key=" + PropertiesUtil.getProperties().getProperty(propKey) + "&id="
                 + StringUtil.join(ids, ",");
 
         // Send post request
@@ -427,7 +433,15 @@ public class EntrezPublicationsRetriever
         }
         final String abstractText = (String) map.get("abstractText");
         if (!StringUtils.isEmpty(abstractText)) {
-            publication.setAttribute("abstractText", abstractText);
+            // see https://github.com/intermine/intermine/issues/2009
+            if (abstractText.length() > POSTGRES_INDEX_SIZE) {
+                String ellipses = "...";
+                String choppedAbtract = abstractText.substring(
+                        0, POSTGRES_INDEX_SIZE - ellipses.length());
+                publication.setAttribute("abstractText", choppedAbtract + ellipses);
+            } else {
+                publication.setAttribute("abstractText", abstractText);
+            }
         }
         final String month = (String) map.get("month");
         if (!StringUtils.isEmpty(month)) {
@@ -554,7 +568,8 @@ public class EntrezPublicationsRetriever
             }
             if ("ERROR".equals(name)) {
                 LOG.error("Unable to retrieve pubmed record: " + characters);
-            } else if ("PMID".equals(qName) && "MedlineCitation".equals(stack.peek())) {
+            } else if ("PMID".equals(qName) && ("MedlineCitation".equals(stack.peek())
+                    || "BookDocument".equals(stack.peek()))) {
                 String pubMedId = characters.toString();
                 Integer pubMedIdInteger;
                 try {

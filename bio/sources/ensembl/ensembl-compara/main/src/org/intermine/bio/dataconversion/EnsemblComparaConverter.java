@@ -245,6 +245,8 @@ public class EnsemblComparaConverter extends BioFileConverter
         return refId;
     }
 
+    // This function shouldn't get called for us because it only gets
+    // called for organism=fly
     private String resolveGene(String taxonId, String identifier) {
         String id = identifier;
 

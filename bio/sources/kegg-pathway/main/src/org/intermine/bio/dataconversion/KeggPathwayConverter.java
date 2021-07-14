@@ -75,7 +75,7 @@ public class KeggPathwayConverter extends BioFileConverter
      */
     public void setKeggOrganisms(String taxonIds) {
         this.taxonIds = new HashSet<String>(Arrays.asList(StringUtils.split(taxonIds, " ")));
-        LOG.info("Setting list of organisms to " + this.taxonIds);
+        System.out.println("Setting list of organisms to " + this.taxonIds);
     }
 
     private void readConfig() {
@@ -201,17 +201,22 @@ public class KeggPathwayConverter extends BioFileConverter
         throws ObjectStoreException {
         String identifier = null;
 
+        /* Test: try to resolve gene to see what output would have been, but then ignore it,
+         * as if not using resolver in the first place. 
+         */
         String taxonId = config.get(organism)[0];
         if (rslv != null && rslv.hasTaxon(taxonId)) {
             int resCount = rslv.countResolutions(taxonId, geneCG);
             if (resCount != 1) {
-                LOG.info("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
+                System.out.println("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
                          + geneCG + " count: " + resCount + " Results: "
                          + rslv.resolveId(taxonId, geneCG));
-                return null;
+                //return null;
             }
-            identifier = rslv.resolveId(taxonId, geneCG).iterator().next();
+            //identifier = rslv.resolveId(taxonId, geneCG).iterator().next();
+            identifier = geneCG;
         } else {
+            System.out.println("No resolver for gene: " + geneCG);
             identifier = geneCG;
         }
 

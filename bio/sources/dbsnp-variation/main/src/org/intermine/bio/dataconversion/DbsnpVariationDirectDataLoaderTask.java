@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
+import org.apache.commons.lang.StringUtils;
 
 import org.intermine.model.InterMineObject;
 import org.intermine.model.bio.BioEntity;
@@ -39,6 +40,7 @@ import org.intermine.model.bio.Indel;
 import org.intermine.model.bio.TandemRepeat;
 import org.intermine.model.bio.Substitution;
 import org.intermine.model.bio.SOTerm;
+import org.intermine.model.bio.Analysis;
 import org.intermine.objectstore.ObjectStoreException;
 import org.intermine.objectstore.proxy.ProxyReference;
 import org.intermine.objectstore.query.ConstraintSet;
@@ -61,7 +63,8 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
     private static final String DATASET_TITLE = "dbSNP (build 147) variants and variant annotations";
     private static final String DATA_SOURCE_NAME = "ensembl dbSNP";
     private static final Logger LOG = Logger.getLogger(DbsnpVariationDirectDataLoaderTask.class);
-    private Integer taxonId = 9913;
+    //private Integer taxonId = 9913;
+    private Integer taxonId = null;
     final static String[] expectedHeaders = {
         "#CHROM",
         "POS",
@@ -75,12 +78,15 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
     private static final String VARIANT_ANNOTATION_SOURCE = "Ensembl VEP";
     private static final ArrayList < String > FUNCTION_CLASS_TO_IGNORE = new ArrayList < String > (Arrays.asList("downstream_gene_variant", "upstream_gene_variant", "intergenic_variant", "intron_variant"));
 
+    private Analysis analysis = null;
     private Organism organism = null;
     private DataSet dataSet = null;
     private DataSource dataSource = null;
     private Ontology ontology = null;
-    private String assemblyVersion = "ARS-UCD1.2";
+    //private String assemblyVersion = "ARS-UCD1.2";
+    private String assemblyVersion = null;
     private String geneSource = null;
+    private String analysisAccession = "";
 
     HashSet < Transcript > transcriptSet = new HashSet < Transcript > ();
     HashSet < Consequence > consequenceSet = new HashSet < Consequence > ();
@@ -104,15 +110,36 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
         this.assemblyVersion = assemblyVersion;
     }
 
-
+    /**
+     * Set the gene source
+     * @param geneSource
+     */
     public void setGeneSource(String geneSource) {
         this.geneSource = geneSource;
     }
 
+    /**
+     * Getter for gene source
+     */ 
     public String getGeneSource() {
         return this.geneSource;
     }
 
+    /**
+     * Set the analysis accession, if applicable (used when setting from project.xml)
+     * @param analysisAccession
+     */
+    public void setAnalysisAccession(String analysisAccession) {
+        this.analysisAccession = analysisAccession;
+    }
+
+    /**
+     * Check if analysis accession was set in project.xml
+     * @return
+     */
+    public boolean analysisAccessionIsNotSet() {
+        return ((analysisAccession == null) || (analysisAccession.matches("(.*)analysisAccession(.*)")));
+    }
 
     /**
      * Setter for taxonId (used when setting taxonId from project.xml)
@@ -133,7 +160,10 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
             LOG.info("Ignoring file " + theFile.getName() + ". Not a VCF file");
         } else {
             if (taxonId == null) {
-                throw new BuildException("taxonId must be set");
+                throw new BuildException("taxonId must be set in project.xml.");
+            }
+            else if (analysisAccessionIsNotSet()) {
+                throw new BuildException("analysisAccession must be set in project.xml. (Set as empty string if no analysis accession to use.)");
             }
 
             //pre-populates proxy references for all Genes, Transcripts and Chromosomes in the production database
@@ -237,6 +267,7 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
             snp.setName("SNP");
             imoTracker.put(snp.getId(), snp);
             snp.setOrganism(getOrganism());
+            setAnalyses(snp);
             snp.setReferenceAllele(ref);
             snp.setLength(1);
             snp.setAlternateAllele(alt);
@@ -308,6 +339,7 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
             indel.setName("INDEL");
             imoTracker.put(indel.getId(), indel);
             indel.setOrganism(getOrganism());
+            setAnalyses(indel);
             indel.setReferenceAllele(ref);
             indel.setAlternateAllele(alt);
             indel.setPrimaryIdentifier(id);
@@ -381,6 +413,7 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
             tsa.setName("SEQUENCE_ALTERATION");
             imoTracker.put(tsa.getId(), tsa);
             tsa.setOrganism(getOrganism());
+            setAnalyses(tsa);
             tsa.setReferenceAllele(ref);
             tsa.setAlternateAllele(alt);
             tsa.setPrimaryIdentifier(id);
@@ -454,6 +487,7 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
             tsa.setName("SUBSTITUTION");
             imoTracker.put(tsa.getId(), tsa);
             tsa.setOrganism(getOrganism());
+            setAnalyses(tsa);
             tsa.setReferenceAllele(ref);
             tsa.setAlternateAllele(alt);
             tsa.setPrimaryIdentifier(id);
@@ -528,6 +562,7 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
             tsa.setName("TANDEM_REPEAT");
             imoTracker.put(tsa.getId(), tsa);
             tsa.setOrganism(getOrganism());
+            setAnalyses(tsa);
             tsa.setReferenceAllele(ref);
             tsa.setAlternateAllele(alt);
             tsa.setPrimaryIdentifier(id);
@@ -1022,6 +1057,35 @@ public class DbsnpVariationDirectDataLoaderTask extends FileDirectDataLoaderTask
             imoTracker.remove(dataSet.getId());
         }
         return dataSet;
+    }
+
+    /**
+     * Returns the current analysis (if applicable)
+     * @return analysisAccession
+     * @throws ObjectStoreException
+     */
+    private Analysis getAnalysis() throws ObjectStoreException {
+        // Assume already checked that analysisAccession != "" before calling this function
+        if (analysis == null) {
+            analysis = getDirectDataLoader().createObject(Analysis.class);
+            imoTracker.put(analysis.getId(), analysis);
+            analysis.setAnalysisAccession(analysisAccession);
+            getDirectDataLoader().store(analysis);
+            imoTracker.remove(analysis.getId());
+        }
+        return analysis;
+    }
+
+    /**
+     * Sets the analyses collection of the feature
+     * @param feature
+     */
+    private void setAnalyses(SequenceFeature feature) throws ObjectStoreException {
+        //System.out.println("Setting analyses for feature: " + feature.getName());
+        if (StringUtils.isNotEmpty(analysisAccession)) {
+            //System.out.println("Setting analysis accession: " + analysisAccession);
+            feature.setAnalyses(new HashSet<Analysis> (Arrays.asList(getAnalysis())));
+        }
     }
 
     /**

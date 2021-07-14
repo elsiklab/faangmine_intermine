@@ -132,6 +132,8 @@ public class GenomicRegionSearchListInput extends ListInput
 
         private final String sequenceFeature = "org.intermine.model.bio.SequenceFeature";
         private String organism;
+        private List<String> categories;
+        private List<String> analyses;
         private Set<String> featureTypes;
         private Set<ClassDescriptor> featureCds;
         private List<String> regions;
@@ -246,6 +248,38 @@ public class GenomicRegionSearchListInput extends ListInput
                 ftSet.add(cld.getType());
             }
             return Collections.unmodifiableSet(ftSet);
+        }
+
+        /**
+         * 
+         * Return categories
+         */
+        public List<String> getCategories() {
+            return categories;
+        } 
+
+        /**
+         * 
+         * @return analyses
+         */
+        public List<String> getAnalyses() {
+            return analyses;
+        }
+
+        /**
+         *
+         * @param categories categories
+         */
+        public void setCategories(List<String> categories) {
+            this.categories = categories;
+        }
+
+        /**
+         *
+         * @param analyses analyses
+         */ 
+        public void setAnalyses(List<String> analyses) {
+            this.analyses = analyses;
         }
 
         /**

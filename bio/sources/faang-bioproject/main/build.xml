@@ -1,0 +1,4 @@
+<project name="faang-bioproject-tasks" default="default" basedir=".">
+  <description>build faang-bioproject tasks</description>
+  <import file="../../../../imbuild/library.xml"/> 
+</project>

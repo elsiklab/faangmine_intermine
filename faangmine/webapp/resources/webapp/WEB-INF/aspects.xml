@@ -83,6 +83,18 @@
     <aspect-source name="Reactome" url="http://www.reactome.org/"/>
   </aspect>
 
+   <aspect name="FAANG">
+    <subtitle>FAANG (Functional Annotation of Animal Genomes)</subtitle>
+    <icon-image>model/images/blank.gif</icon-image>
+    <large-image>model/images/blank.gif</large-image>
+    <intro-text>
+      FAANG
+    </intro-text>
+    <tile-name>model/faang.jsp</tile-name>
+    <aspect-source name="FAANG.org" url="https://www.faang.org/"/>
+  </aspect>
+
+<!--
   <aspect name="Interactions">
     <subtitle></subtitle>
     <icon-image>model/images/interaction.gif</icon-image>
@@ -95,6 +107,8 @@
     <aspect-source name="BIOGRID" url="http://thebiogrid.org/"/>
     <aspect-source name="IntAct" url="http://www.ebi.ac.uk/intact/"/>
   </aspect>
+-->
+
   <aspect name="Expression">
     <subtitle>Gene Expression</subtitle>
     <icon-image>model/images/Heatmap.png</icon-image>

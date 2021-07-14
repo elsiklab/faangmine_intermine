@@ -121,7 +121,9 @@ public class PubMedGeneConverter extends BioFileConverter
     }
 
     private Item getGene(String identifier, String taxonId) {
-        String resolvedIdentifier = resolveGene(taxonId, identifier);
+        // Don't use resolver
+        // String resolvedIdentifier = resolveGene(taxonId, identifier);
+        String resolvedIdentifier = identifier;
         if (resolvedIdentifier == null) {
             return null;
         }
@@ -158,6 +160,9 @@ public class PubMedGeneConverter extends BioFileConverter
         return gene;
     }
 
+    /*
+     * DO NOT USE!
+     *  
     private String resolveGene(String taxonId, String identifier) {
         if (rslv == null || !rslv.hasTaxon(taxonId)) {
             return identifier;
@@ -170,4 +175,5 @@ public class PubMedGeneConverter extends BioFileConverter
         }
         return rslv.resolveId(taxonId, identifier).iterator().next();
     }
+    */
 }

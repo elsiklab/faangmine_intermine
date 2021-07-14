@@ -1,0 +1,18 @@
+li.category {
+  font-weight: bold;
+}
+
+li.empty-features .jstree-checkbox,
+#hiddenCategories,
+#hiddenAnalyses {
+  display: none!important;
+}
+
+li.empty-features a {
+  color: #888888!important;
+}
+
+li.empty-features a:hover,
+li.empty-features a:active {
+  text-decoration: none!important;
+}

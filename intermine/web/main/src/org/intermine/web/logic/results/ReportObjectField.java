@@ -11,6 +11,9 @@ package org.intermine.web.logic.results;
  */
 
 import org.apache.commons.lang.StringUtils;
+import org.intermine.pathquery.ConstraintValueParser;
+
+import java.util.Date;
 
 /**
  * Object field, used in header the summary of ReportObject
@@ -64,7 +67,14 @@ public class ReportObjectField
             boolean doNotTruncate,
             boolean escapeXml) {
         this.fieldName = fieldName;
-        this.fieldValue = fieldValue;
+        // See https://github.com/danielabutano/intermine/commit/a8e99c145a37f974f82b98c2f757f3a4df4c8b63
+        if (fieldValue instanceof String) {
+            this.fieldValue = (fieldValue != null && fieldValue.equals("null")) ? "" : fieldValue;
+        } else if (fieldValue instanceof Date) {
+            this.fieldValue = ConstraintValueParser.ISO_DATE_FORMAT.format(fieldValue);
+        } else {
+            this.fieldValue = fieldValue;
+        }
         this.fieldDisplayerPage = fieldDisplayerPage;
         this.fieldDoNotTruncate = doNotTruncate;
         this.fieldEscapeXml = escapeXml;

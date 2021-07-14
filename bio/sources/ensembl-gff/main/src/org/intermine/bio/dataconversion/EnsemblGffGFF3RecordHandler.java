@@ -33,7 +33,7 @@ import java.util.Map.Entry;
  * A converter/retriever for the EnsemblGff dataset via GFF files.
  */
 
-public class EnsemblGffGFF3RecordHandler extends GFF3RecordHandler
+public class EnsemblGffGFF3RecordHandler extends AnalysisGFF3RecordHandler
 {
     /**
      * Create a new EnsemblGffGFF3RecordHandler for the given data model.
@@ -73,6 +73,8 @@ public class EnsemblGffGFF3RecordHandler extends GFF3RecordHandler
      */
     @Override
     public void process(GFF3Record record) {
+        // Call parent to handle analysis accessions
+        super.process(record);
 
         Item feature = getFeature();
         String clsName = feature.getClassName();
@@ -115,7 +117,7 @@ public class EnsemblGffGFF3RecordHandler extends GFF3RecordHandler
                 }
             }
         }
-        else if( clsName.equals("MRNA") || clsName.equals("SRNA") || clsName.equals("ScaRNA") ||clsName.equals("TRCGene") || clsName.equals("TRVGene") || clsName.equals("IGCGene") || clsName.equals("IGVGene") || clsName.equals("Ribozyme") || clsName.equals("Transcript") || clsName.equals("TRNA") || clsName.equals("MiRNA") || clsName.equals("RRNA") || clsName.equals("SnRNA") || clsName.equals("SnoRNA") || clsName.equals("LincRNA") || clsName.equals("LncRNA") || clsName.equals("TRJGene")) {
+        else if( clsName.equals("MRNA") || clsName.equals("SRNA") || clsName.equals("ScaRNA") ||clsName.equals("TRCGene") || clsName.equals("TRVGene") || clsName.equals("IGCGene") || clsName.equals("IGVGene") || clsName.equals("Ribozyme") || clsName.equals("Transcript") || clsName.equals("TRNA") || clsName.equals("MiRNA") || clsName.equals("RRNA") || clsName.equals("SnRNA") || clsName.equals("SnoRNA") || clsName.equals("LincRNA") || clsName.equals("LncRNA") || clsName.equals("TRJGene") || clsName.equals("YRNA") || clsName.equals("VaultRNA")) {
             if(record.getAttributes().get("ID") != null){
                 String id = record.getAttributes().get("ID").iterator().next();
                 feature.setAttribute("primaryIdentifier", id);
@@ -222,7 +224,7 @@ public class EnsemblGffGFF3RecordHandler extends GFF3RecordHandler
         if (biotype.equals("Mt_tRNA") || biotype.equals("TR_C_gene") || biotype.equals("TR_V_gene") ||biotype.equals("IG_C_gene") || biotype.equals("IG_V_gene")|| biotype.equals("Mt_rRNA") || biotype.equals("RNase_MRP_RNA") || biotype.equals("SRP_RNA") || biotype.equals("misc_RNA") || biotype.equals("C_region") || biotype.equals("V_segment") || biotype.equals("telomerase_RNA")) {
             returnType = biotype.replace("_", " ");
         }
-        else if (biotype.equals("miRNA") || biotype.equals("sRNA") || biotype.equals("scaRNA") || biotype.equals("ribozyme") || biotype.equals("tRNA") || biotype.equals("rRNA") || biotype.equals("snRNA") || biotype.equals("snoRNA") || biotype.equals("lncRNA") || biotype.equals("lincRNA") || biotype.equals("lncRNA") || biotype.equals("TR_J_gene")) {
+        else if (biotype.equals("miRNA") || biotype.equals("sRNA") || biotype.equals("scaRNA") || biotype.equals("ribozyme") || biotype.equals("tRNA") || biotype.equals("rRNA") || biotype.equals("snRNA") || biotype.equals("snoRNA") || biotype.equals("lncRNA") || biotype.equals("lincRNA") || biotype.equals("lncRNA") || biotype.equals("TR_J_gene") || biotype.equals("Y_RNA") || biotype.equals("vault_RNA")) {
             returnType = biotype;
         }
         else if (biotype.equals("protein_coding") || biotype.equals("processed_pseudogene")) {

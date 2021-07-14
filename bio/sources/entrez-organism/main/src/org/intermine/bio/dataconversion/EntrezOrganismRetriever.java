@@ -38,6 +38,7 @@ import org.intermine.util.SAXParser;
 import org.intermine.xml.full.FullRenderer;
 import org.intermine.xml.full.Item;
 import org.intermine.xml.full.ItemFactory;
+import org.intermine.util.PropertiesUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
@@ -52,7 +53,8 @@ public class EntrezOrganismRetriever extends Task
     protected static final Logger LOG = Logger.getLogger(EntrezOrganismRetriever.class);
     // see https://eutils.ncbi.nlm.nih.gov/entrez/query/static/esummary_help.html for details
     protected static final String ESUMMARY_URL =
-        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=taxonomy&retmode=xml&id=";
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi";
+    protected static final String propKey = "ncbi.eutils.apiKey";
     // number of summaries to retrieve per request
     protected static final int BATCH_SIZE = 500;
     private String osAlias = null;
@@ -114,6 +116,7 @@ public class EntrezOrganismRetriever extends Task
                 if (taxonIds.size() == BATCH_SIZE || !i.hasNext()) {
                     SAXParser.parse(new InputSource(getReader(taxonIds)),
                                     new Handler(toStore, itemFactory), false);
+                    System.out.println("Parsed");
                     for (Iterator<Item> j = toStore.iterator(); j.hasNext();) {
                         Item item = j.next();
                         writer.write(FullRenderer.render(item));
@@ -168,7 +171,8 @@ public class EntrezOrganismRetriever extends Task
      * @throws Exception if an error occurs
      */
     protected Reader getReader(Set<Integer> ids) throws Exception {
-        URL url = new URL(ESUMMARY_URL + StringUtil.join(ids, ","));
+        URL url = new URL(getEsummaryURL() + StringUtil.join(ids, ","));
+        System.out.println("Looking up URL: " + url);
         return new BufferedReader(new InputStreamReader(url.openStream()));
     }
 
@@ -179,8 +183,21 @@ public class EntrezOrganismRetriever extends Task
      * @throws Exception if something goes wrong
      */
     protected static Reader getReader(Integer id) throws Exception {
-        URL url = new URL(ESUMMARY_URL + id);
+        URL url = new URL(getEsummaryURL() + id);
+        System.out.println("Looking up URL: " + url);
         return new BufferedReader(new InputStreamReader(url.openStream()));
+    }
+
+
+    /**
+     * Build the esummary URL with parameters including API key
+     * @return String esummary URL with parameters
+     */
+    protected static String getEsummaryURL() {
+        // New: include API key in lookups
+        // API Key stored in intermine properties file
+        String apiKey = PropertiesUtil.getProperties().getProperty(propKey);
+        return ESUMMARY_URL + "?db=taxonomy&retmode=xml&api_key=" + apiKey + "&id=";
     }
 
 /*

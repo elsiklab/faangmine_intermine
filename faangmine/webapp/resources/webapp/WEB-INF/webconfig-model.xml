@@ -23,6 +23,19 @@
     </fields>
   </class>
 
+  <class className="org.intermine.model.bio.BioSample">
+    <headerconfig>
+      <titles>
+        <title mainTitles="tissue|bioSampleId" numberOfMainTitlesToShow="1" subTitles="" />
+      </titles>
+    </headerconfig>
+    <fields>
+      <fieldconfig fieldExpr="bioSampleId" label="BioSample id" />
+      <fieldconfig fieldExpr="project" label="Project" />
+      <fieldconfig fieldExpr="tissue" label="Tissue" />
+    </fields>
+  </class>
+
   <class className="org.intermine.model.bio.CDS">
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier" name="CDS ID"/>
@@ -82,18 +95,18 @@
       </titles>
     </headerconfig>
     <fields>
-      <fieldconfig fieldExpr="FPKM"/>
-      <fieldconfig fieldExpr="TPM"/>
+      <fieldconfig fieldExpr="experiment" showInSummary="false"/>
+      <fieldconfig fieldExpr="FPKM" showInSummary="false"/>
+      <fieldconfig fieldExpr="TPM" showInSummary="false"/>
     </fields>
   </class>
 
-  <class className="org.intermine.model.bio.ExpressionMetadata">
+  <class className="org.intermine.model.bio.Experiment">
     <fields>
       <fieldconfig fieldExpr="experiment" label="SRA Experiment Accession"/>
       <fieldconfig fieldExpr="sraStudy" label="SRA Study Accession" showInSummary="false"/>
       <fieldconfig fieldExpr="sraSubmission" label="SRA Submission Accession" showInSummary="false"/>
       <fieldconfig fieldExpr="sraSample" label="SRA Sample Accession" showInSummary="false"/>
-      <fieldconfig fieldExpr="biosample" label="Bio Sample ID"/>
       <fieldconfig fieldExpr="run" label="SRA Run Accession"/>
       <fieldconfig fieldExpr="sampleName" label="Sample Name"/>
       <fieldconfig fieldExpr="tissue"/>
@@ -120,12 +133,16 @@
     </inlinelist>
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier" label="Gene ID"/>
-      <fieldconfig fieldExpr="secondaryIdentifier"/>
       <fieldconfig fieldExpr="symbol"/>
       <fieldconfig fieldExpr="source"/>
+      <fieldconfig fieldExpr="biotype"/>
       <fieldconfig fieldExpr="description"/>
-       <fieldconfig fieldExpr="length" displayer="/model/sequenceShortDisplayerWithField.jsp" />
+      <fieldconfig fieldExpr="length" displayer="/model/sequenceShortDisplayerWithField.jsp" />
       <fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
+      <fieldconfig fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false" showInSummary="false" />
+      <fieldconfig fieldExpr="chromosomeLocation.start" showInInlineCollection="false" showInSummary="false" />
+      <fieldconfig fieldExpr="chromosomeLocation.end" showInInlineCollection="false" showInSummary="false" />
+      <fieldconfig fieldExpr="chromosomeLocation.strand" showInInlineCollection="false" showInSummary="false" />
       <fieldconfig fieldExpr="organism.shortName" label="Organism"/>
       <fieldconfig fieldExpr="chromosome.assembly" label="Assembly"/>
     </fields>
@@ -136,6 +153,19 @@
       <fieldconfig fieldExpr="source"/>
       <fieldconfig fieldExpr="code"/>
       <fieldconfig fieldExpr="evidenceOntology.name" label="name"/>
+    </fields>
+  </class>
+
+  <class className="org.intermine.model.bio.HistoneBindingSite">
+    <fields>
+      <fieldconfig fieldExpr="primaryIdentifier"/>
+      <fieldconfig fieldExpr="length" displayer="/model/sequenceShortDisplayerWithField.jsp" />
+      <fieldconfig fieldExpr="chromosomeLocation" displayer="/model/chromosomeLocDisplayer.jsp" showInResults="false" />
+      <fieldconfig fieldExpr="chromosome.primaryIdentifier" showInInlineCollection="false" showInSummary="false" />
+      <fieldconfig fieldExpr="chromosomeLocation.start" showInInlineCollection="false" showInSummary="false" />
+      <fieldconfig fieldExpr="chromosomeLocation.end" showInInlineCollection="false" showInSummary="false" />
+      <fieldconfig fieldExpr="chromosome.assembly" label="Assembly" />
+      <fieldconfig fieldExpr="organism.name"/>
     </fields>
   </class>
 
@@ -185,7 +215,6 @@
       <fieldconfig fieldExpr="ontologyTerm.identifier"/>
       <fieldconfig fieldExpr="ontologyTerm.name"/>
       <fieldconfig fieldExpr="ontologyTerm.description"/>
-      <fieldconfig fieldExpr="dataSets.name" label="Dataset"/>
     </fields>
   </class>
 
@@ -233,7 +262,6 @@
     <fields>
       <fieldconfig fieldExpr="identifier"/>
       <fieldconfig fieldExpr="name"/>
-      <fieldconfig fieldExpr="dataSets.name" label="Dataset"/>
     </fields>
   </class>
 
@@ -241,7 +269,6 @@
     <fields>
       <fieldconfig fieldExpr="primaryIdentifier"/>
       <fieldconfig fieldExpr="mrnaIdentifier" label="mRNA Identifier"/>
-      <fieldconfig fieldExpr="dataSets.name" label="Dataset"/>
     </fields>
   </class>
 
@@ -257,7 +284,19 @@
       <fieldconfig fieldExpr="primaryAccession"/>
       <fieldconfig fieldExpr="organism.name"/>
       <fieldconfig fieldExpr="length" displayer="/model/sequenceShortDisplayerWithField.jsp" />
-      <fieldconfig fieldExpr="dataSets.name" label="datasets"/>
+    </fields>
+  </class>
+
+  <class className="org.intermine.model.bio.BioProject">
+    <headerconfig>
+      <titles>
+        <title mainTitles="category|bioProjectId" numberOfMainTitlesToShow="1" subTitles="" />
+      </titles>
+    </headerconfig>
+    <fields>
+      <fieldconfig fieldExpr="bioProjectId" label="BioProject id" />
+      <fieldconfig fieldExpr="category" label="Category" />
+      <fieldconfig fieldExpr="assayType" label="Assay Type" />
     </fields>
   </class>
 
@@ -326,6 +365,26 @@
       <fieldconfig fieldExpr="chromosomeLocation.start"/>
       <fieldconfig fieldExpr="chromosomeLocation.end"/>
       <fieldconfig fieldExpr="chromosome.assembly" label="Assembly" />
+    </fields>
+  </class>
+
+  <class className="org.intermine.model.bio.Analysis">
+    <headerconfig>
+      <titles>
+        <title mainTitles="title|analysisAccession" numberOfMainTitlesToShow="1" subTitles="" />
+      </titles>
+    </headerconfig>
+    <fields>
+      <fieldconfig fieldExpr="title" />
+      <fieldconfig fieldExpr="analysisAccession" label="Analysis Accession" />
+      <fieldconfig fieldExpr="project" label="Project" />
+      <fieldconfig fieldExpr="analysisType" label="Analysis Type" />
+      <fieldconfig fieldExpr="annotationType" label="Annotation Type" />
+      <fieldconfig fieldExpr="experimentType" label="Experiment Type" />
+      <fieldconfig fieldExpr="factor" label="Factor" />
+      <fieldconfig fieldExpr="tissue" label="Tissue" />
+      <fieldconfig fieldExpr="software" label="Software" />
+      <fieldconfig fieldExpr="peakWidth" label="Peak Width" />
     </fields>
   </class>
 

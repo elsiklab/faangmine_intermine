@@ -704,6 +704,7 @@ public class AjaxServices
         if (StringUtils.isEmpty(mineName)
                 || StringUtils.isEmpty(domains)
                 || StringUtils.isEmpty(idents)) {
+	LOG.error("this stuff is null");
             return null;
         }
         final HttpSession session = WebContextFactory.get().getSession();
@@ -720,6 +721,7 @@ public class AjaxServices
         } else {
             // Mine is alive
             LOG.debug(mine.getName() + " is at " + mine.getReleaseVersion());
+            LOG.error(mine.getName() + " is at " + mine.getReleaseVersion());
             ObjectRequest req = new ObjectRequest(domains, idents);
             MultiKey key = new MultiKey(mine.getName(), req);
             // From cache, or from service.
@@ -733,6 +735,7 @@ public class AjaxServices
             fmm.cacheLinks(key, results);
         }
         LOG.debug("Links: " + results);
+	LOG.error("Where dem links? " + results);
         return results;
     }
 

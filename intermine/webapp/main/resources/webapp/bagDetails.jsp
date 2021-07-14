@@ -297,9 +297,14 @@
   <div style="clear:both"></div>
 </div>
 
-<div>
-  <p><strong>Note:</strong>  For the enrichment widgets you should change the background population from the default to one of the available gene sets or your own background gene list.</p>
-  <br/><br/>
+<div class="body">
+
+<p><span class="bigmessage"><font color="#a51b00">Important Notes for Enrichment Widgets to avoid false positives:</font></span></p>
+
+<p>1. If your gene list contains genes from more than one gene set, it is critical that you create new lists for each specific gene set and then redo the analyses separately by clicking the newly saved lists on your List View page. You can filter the table above for a particular gene set using the histogram icon above the Gene Source column in the table above. Then "Save as List".</p>
+
+<p>2. You should change the background population from the default to one of the available gene sets or your own background gene list.</p><br>
+
 </div>
 
 <script language="javascript">

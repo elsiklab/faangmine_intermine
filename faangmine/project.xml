@@ -9,736 +9,1178 @@
 
       <!--Ontologies-->
         <source name="uberon" type="uber-anatomy-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/uber-anatomy-ontology/uberon-basic_OCT2017.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/uber-anatomy-ontology/uberon-basic_20200513.obo"/>
         </source>
         <source name="mouse-anatomy-ontology" type="mouse-anatomy-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/mouse-anatomy-ontology/ma_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/mouse-anatomy-ontology/ma_20200513.obo"/>
         </source>
         <source name="brenda-tissue-ontology" type="brenda-tissue-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/brenda-tissue-ontology/BrendaTissue_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/brenda-tissue-ontology/BrendaTissue_20200513.obo"/>
         </source>
         <source name="clinical-measurement-ontology" type="clinical-measurement-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/clinical-measurement-ontology/clinical_measurement_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/clinical-measurement-ontology/clinical_measurement_20200513.obo"/>
         </source>
         <source name="livestock-breed-ontology" type="livestock-breed-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/livestock-breed-ontology/LBO_v.4.1_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/livestock-breed-ontology/LBO_v5.4_20200513.obo"/>
         </source>
         <source name="livestock-product-trait-ontology" type="livestock-product-trait-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/livestock-product-trait-ontology/LPT_v2.2_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/livestock-product-trait-ontology/LPT_v2.2_20200513.obo"/>
         </source>
         <source name="vertebrate-trait-ontology" type="vertebrate-trait-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/vertebrate-trait-ontology/VT_v8.8_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/vertebrate-trait-ontology/VT_v10.3_20200513.obo"/>
         </source>
         <source name="evidence-ontology" type="evidence-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/evidence-ontology/eco_OCT2017.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/evidence-ontology/eco_20200513.obo"/>
         </source>
         <source name="psi-mi-ontology" type="psi-mi-ontology">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/psi-mi-ontology/psi-mi_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/psi-mi-ontology/psi-mod_20200513.obo"/>
         </source>
         <source name="sequence-ontology" type="so">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/sequence-ontology/so_20190329.obo"/>
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/sequence-ontology/so_20200513.obo"/>
         </source>
         <source name="gene-ontology" type="go">
-            <property name="src.data.file" location="/db/FAANGMine_release_1.1_april2019/datasets/ontologies/gene-ontology/go_20190328.obo"/>
+            <!--property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/gene-ontology/go_20200513.obo"/-->
+            <property name="src.data.file" location="/db/FAANGMine_release_v1.2/datasets/ontologies/gene-ontology/go-basic.obo"/>
+        </source>
+
+
+        <!-- BioProject, BioSample, and Analysis data
+             Should be loaded relatively early (prior to gff for instance) and in the order as below.
+        -->
+        <!-- first load bioproject data -->
+        <source name="faang-bioproject" type="faang-bioproject">
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/faang-bioproject"/>
+        </source>
+        <!-- next load biosample data -->
+        <source name="faang-biosample" type="faang-biosample">
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/faang-biosample"/>
+        </source>
+        <!-- then load analysis data to create analysis table with refs to bioprojects and biosamples -->
+        <source name="faang-analysis" type="faang-analysis">
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/faang-analysis"/>
         </source>
 
 	<!--Custom Gene Info-->
 	<!--Alert: All of the custom-gene-info types below have had geneSource added. I would also like to add organisms.
 	-->
         <source name="human-gene-info-refseq" type="custom-gene-info">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/custom-gene-info/refseq/human/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/custom-gene-info/refseq/human/"/>
             <property name="geneSource" value="RefSeq"/>
         </source>
         <source name="mouse-gene-info-refseq" type="custom-gene-info">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/custom-gene-info/refseq/mouse/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/custom-gene-info/refseq/mouse/"/>
             <property name="geneSource" value="RefSeq"/>
 	</source>
         <source name="rat-gene-info-refseq" type="custom-gene-info">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/custom-gene-info/refseq/rat/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/custom-gene-info/refseq/rat/"/>
             <property name="geneSource" value="RefSeq"/>
 	</source>
         <source name="human-gene-info-ensembl" type="custom-gene-info">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/custom-gene-info/ensembl/human/"/>
-            <property name="geneSource" value="Ensembl95"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/custom-gene-info/ensembl/human/"/>
+            <property name="geneSource" value="Ensembl"/>
         </source>
         <source name="mouse-gene-info-ensembl" type="custom-gene-info">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/custom-gene-info/ensembl/mouse/"/>
-            <property name="geneSource" value="Ensembl95"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/custom-gene-info/ensembl/mouse/"/>
+            <property name="geneSource" value="Ensembl"/>
 	</source>
         <source name="rat-gene-info-ensembl" type="custom-gene-info">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/custom-gene-info/ensembl/rat/"/>
-            <property name="geneSource" value="Ensembl95"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/custom-gene-info/ensembl/rat/"/>
+            <property name="geneSource" value="Ensembl"/>
 	</source>
 
-	<!--Alert: All of the dbsnp-variation types below have had taxonID added. Someone check the loader to make sure this works.
-	-->
+
+	<!--Alert: All of the dbsnp-variation types below have had taxonID added.
+            Additionally analysisAccession is now a required parameter. Set to empty string if no analysis data for the organism.
+        -->
+
+        <!-- Bos taurus -->
 	<source name="ARS-UCD1.2-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9913"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_I"/>
 	</source>
-	
+
 	<source name="ARS-UCD1.2-dbsnp-variation-II" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9913"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_II"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_II"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9913"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_III"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9913"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_IV"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9913"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_V"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_V"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9913"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_VI"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9913"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_VII"/>
 	</source>
 
         <source name="ARS-UCD1.2-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9913"/>
           <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_VIII"/>
         </source>
 
         <source name="ARS-UCD1.2-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9913"/>
           <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_IX"/>
         </source>
 
         <source name="ARS-UCD1.2-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9913"/>
           <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_X"/>
         </source>
-	
+
+        <source name="ARS-UCD1.2-dbsnp-variation-XI" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9913"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_XI"/>
+        </source>
+
+        <source name="ARS-UCD1.2-dbsnp-variation-XII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9913"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_XII"/>
+        </source>
+
+        <source name="ARS-UCD1.2-dbsnp-variation-XIII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9913"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_XIII"/>
+        </source>
+
+        <source name="ARS-UCD1.2-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9913"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_XIV"/>
+        </source>
+
+        <source name="ARS-UCD1.2-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9913"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS-UCD1.2"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/bos_taurus/ARS-UCD1.2/part_XV"/>
+        </source>
+
+        <!-- Canis lupus familiaris -->
 	<source name="CanFam3.1-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9615"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_I"/>
 	</source>
 	
 	<source name="CanFam3.1-dbsnp-variation-II" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9615"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_II"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_II"/>
 	</source>
 	
 	<source name="CanFam3.1-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9615"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_III"/>
 	</source>
 	
 	<source name="CanFam3.1-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9615"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_IV"/>
 	</source>
 	
 	<source name="CanFam3.1-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9615"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_V"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_V"/>
 	</source>
 	
 	<source name="CanFam3.1-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9615"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_VI"/>
 	</source>
 	
 	<source name="CanFam3.1-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9615"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_VII"/>
 	</source>
 
         <source name="CanFam3.1-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9615"/>
           <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_VIII"/>
         </source>
 
         <source name="CanFam3.1-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9615"/>
           <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_IX"/>
         </source>
 
         <source name="CanFam3.1-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9615"/>
           <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_X"/>
         </source>
 
+        <source name="CanFam3.1-dbsnp-variation-XI" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9615"/>
+          <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_XI"/>
+        </source>
+
+        <source name="CanFam3.1-dbsnp-variation-XII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9615"/>
+          <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_XII"/>
+        </source>
+
+        <source name="CanFam3.1-dbsnp-variation-XIII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9615"/>
+          <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_XIII"/>
+        </source>
+
+        <source name="CanFam3.1-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9615"/>
+          <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_XIV"/>
+        </source>
+
+        <source name="CanFam3.1-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9615"/>
+          <property name="dbsnp-variation.assemblyVersion" value="CanFam3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/canis_lupus_familiaris/CanFam3.1/part_XV"/>
+        </source>
+
+        <!-- Capra hircus -->
 	<source name="ARS1-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9925"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_I"/>
 	</source>
 	
 	<source name="ARS1-dbsnp-variation-II" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9925"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_II"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_II"/>
 	</source>
 	
 	<source name="ARS1-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9925"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_III"/>
 	</source>
 	
 	<source name="ARS1-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9925"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_IV"/>
 	</source>
 	
 	<source name="ARS1-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9925"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_V"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_V"/>
 	</source>
 	
 	<source name="ARS1-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9925"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_VI"/>
 	</source>
 	
 	<source name="ARS1-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9925"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_VII"/>
 	</source>
 	
         <source name="ARS1-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9925"/>
           <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_VIII"/>
         </source>
 
         <source name="ARS1-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9925"/>
           <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_IX"/>
         </source>
 
         <source name="ARS1-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9925"/>
           <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/capra_hircus/ARS1/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_X"/>
         </source>
 
+       <source name="ARS1-dbsnp-variation-XI" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9925"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_XI"/>
+        </source>
+
+       <source name="ARS1-dbsnp-variation-XII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9925"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_XII"/>
+        </source>
+
+       <source name="ARS1-dbsnp-variation-XIII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9925"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_XIII"/>
+        </source>
+
+       <source name="ARS1-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9925"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_XIV"/>
+        </source>
+
+       <source name="ARS1-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9925"/>
+          <property name="dbsnp-variation.assemblyVersion" value="ARS1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/capra_hircus/ARS1/part_XV"/>
+        </source>
+
+        <!-- Equus caballus -->
 	<source name="EquCab3.0-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9796"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_I"/>
 	</source>
 	
 	<source name="EquCab3.0-dbsnp-variation-II" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9796"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_II"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_II"/>
 	</source>
 	
 	<source name="EquCab3.0-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9796"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_III"/>
 	</source>
 	
 	<source name="EquCab3.0-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9796"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_IV"/>
 	</source>
 	
 	<source name="EquCab3.0-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9796"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_V"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_V"/>
 	</source>
 	
 	<source name="EquCab3.0-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9796"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_VI"/>
 	</source>
 	
 	<source name="EquCab3.0-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9796"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_VII"/>
 	</source>
 
         <source name="EquCab3.0-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9796"/>
           <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_VIII"/>
         </source>
 
         <source name="EquCab3.0-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9796"/>
           <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_IX"/>
         </source>
 
         <source name="EquCab3.0-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9796"/>
           <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/equus_caballus/EquCab3.0/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_X"/>
         </source>
 
+        <source name="EquCab3.0-dbsnp-variation-XI" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9796"/>
+          <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_XI"/>
+        </source>
+
+        <source name="EquCab3.0-dbsnp-variation-XII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9796"/>
+          <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_XII"/>
+        </source>
+
+        <source name="EquCab3.0-dbsnp-variation-XIII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9796"/>
+          <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_XIII"/>
+        </source>
+
+        <source name="EquCab3.0-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9796"/>
+          <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_XIV"/>
+        </source>
+
+        <source name="EquCab3.0-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9796"/>
+          <property name="dbsnp-variation.assemblyVersion" value="EquCab3.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value="PRJNA421018"/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/equus_caballus/EquCab3.0/part_XV"/>
+        </source>
+
+        <!-- Felis catus -->
 	<source name="Felis_catus_9.0-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9685"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_I"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-dbsnp-variation-II" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9685"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_II"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_II"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9685"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_III"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9685"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_IV"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9685"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_V"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_V"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9685"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_VI"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9685"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_VII"/>
 	</source>
-
 
         <source name="Felis_catus_9.0-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9685"/>
           <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_VIII"/>
         </source>
 
         <source name="Felis_catus_9.0-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9685"/>
           <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_IX"/>
         </source>
 
         <source name="Felis_catus_9.0-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9685"/>
           <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_X"/>
         </source>
-	
+
+        <source name="Felis_catus_9.0-dbsnp-variation-XI" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9685"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_XI"/>
+        </source>
+
+        <source name="Felis_catus_9.0-dbsnp-variation-XII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9685"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_XII"/>
+        </source>
+
+        <source name="Felis_catus_9.0-dbsnp-variation-XIII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9685"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_XIII"/>
+        </source>
+
+        <source name="Felis_catus_9.0-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9685"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_XIV"/>
+        </source>
+
+        <source name="Felis_catus_9.0-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9685"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Felis_catus_9.0"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/felis_catus/Felis_catus_9.0/part_XV"/>
+        </source>
+
+        <!-- Gallus gallus -->
 	<source name="GRCg6a-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9031"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_I"/>
 	</source>
 	
 	<source name="GRCg6a-dbsnp-variation-II" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9031"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_II"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_II"/>
 	</source>
 	
 	<source name="GRCg6a-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9031"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_III"/>
 	</source>
 	
 	<source name="GRCg6a-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9031"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_IV"/>
 	</source>
 	
 	<source name="GRCg6a-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9031"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_V"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_V"/>
 	</source>
 	
 	<source name="GRCg6a-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9031"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_VI"/>
 	</source>
 	
 	<source name="GRCg6a-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9031"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_VII"/>
 	</source>
 
         <source name="GRCg6a-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9031"/>
           <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_VIII"/>
         </source>
 
         <source name="GRCg6a-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9031"/>
           <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_IX"/>
         </source>
 
         <source name="GRCg6a-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9031"/>
           <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/gallus_gallus/GRCg6a/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_X"/>
         </source>
-	
+
+        <source name="GRCg6a-dbsnp-variation-XI" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9031"/>
+          <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_XI"/>
+        </source>
+
+        <source name="GRCg6a-dbsnp-variation-XII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9031"/>
+          <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_XII"/>
+        </source>
+
+        <source name="GRCg6a-dbsnp-variation-XIII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9031"/>
+          <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_XIII"/>
+        </source>
+
+        <source name="GRCg6a-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9031"/>
+          <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_XIV"/>
+        </source>
+
+        <source name="GRCg6a-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9031"/>
+          <property name="dbsnp-variation.assemblyVersion" value="GRCg6a"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/gallus_gallus/GRCg6a/part_XV"/>
+        </source>
+
+        <!-- Ovis aries -->	
 	<source name="Oar_v3.1-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9940"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_I"/>
 	</source>
 	
 	<source name="Oar_v3.1-dbsnp-variation-II" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9940"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_II"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_II"/>
 	</source>
 	
 	<source name="Oar_v3.1-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9940"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_III"/>
 	</source>
 	
 	<source name="Oar_v3.1-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9940"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_IV"/>
 	</source>
 	
 	<source name="Oar_v3.1-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9940"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_V"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_V"/>
 	</source>
 	
 	<source name="Oar_v3.1-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9940"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_VI"/>
 	</source>
 	
 	<source name="Oar_v3.1-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9940"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_VII"/>
 	</source>
-
 
         <source name="Oar_v3.1-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9940"/>
           <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_VIII"/>
         </source>
-
 
         <source name="Oar_v3.1-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9940"/>
           <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_IX"/>
         </source>
 
         <source name="Oar_v3.1-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9940"/>
           <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/ovis_aries/Oar_v3.1/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_X"/>
         </source>
-	
+
+        <source name="Oar_v3.1-dbsnp-variation-XI" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9940"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_XI"/>
+        </source>
+
+        <source name="Oar_v3.1-dbsnp-variation-XII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9940"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_XII"/>
+        </source>
+
+        <source name="Oar_v3.1-dbsnp-variation-XIII" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9940"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_XIII"/>
+        </source>
+
+        <source name="Oar_v3.1-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9940"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_XIV"/>
+        </source>
+
+        <source name="Oar_v3.1-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9940"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Oar_v3.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/ovis_aries/Oar_v3.1/part_XV"/>
+        </source>
+
+        <!-- Sus scrofa -->
 	<source name="Sscrofa11.1-dbsnp-variation-I" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9823"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_I"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_I"/>
 	</source>
-	
-	<source name="Sscrofa11.1-dbsnp-variation-II" type="dbsnp-variation">
-	  <property name="dbsnp-variation.taxonId" value="9823"/>
-	  <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
-	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_II"/>
-	</source>
+
+        <source name="Sscrofa11.1-dbsnp-variation-II" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9823"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_II"/>
+        </source>
 
         <source name="Sscrofa11.1-dbsnp-variation-III" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9823"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_III"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_III"/>
 	</source>
 	
 	<source name="Sscrofa11.1-dbsnp-variation-IV" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9823"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_IV"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_IV"/>
 	</source>
 	
 	<source name="Sscrofa11.1-dbsnp-variation-V" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9823"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_V"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_V"/>
 	</source>
 	
 	<source name="Sscrofa11.1-dbsnp-variation-VI" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9823"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_VI"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_VI"/>
 	</source>
 	
 	<source name="Sscrofa11.1-dbsnp-variation-VII" type="dbsnp-variation">
 	  <property name="dbsnp-variation.taxonId" value="9823"/>
 	  <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-	  <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+	  <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
 	  <property name="src.data.dir.includes" value="*.vcf"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_VII"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_VII"/>
 	</source>
 
         <source name="Sscrofa11.1-dbsnp-variation-VIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9823"/>
           <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_VIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_VIII"/>
         </source>
 
+        <!-- empty -->
         <source name="Sscrofa11.1-dbsnp-variation-IX" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9823"/>
           <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_IX"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_IX"/>
         </source>
-	
-	<!-- extras -->
 
         <source name="Sscrofa11.1-dbsnp-variation-X" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9823"/>
           <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_X"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_X"/>
         </source>
 
         <source name="Sscrofa11.1-dbsnp-variation-XI" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9823"/>
           <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XI"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XI"/>
         </source>
 
         <source name="Sscrofa11.1-dbsnp-variation-XII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9823"/>
           <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XII"/>
         </source>
+
         <source name="Sscrofa11.1-dbsnp-variation-XIII" type="dbsnp-variation">
           <property name="dbsnp-variation.taxonId" value="9823"/>
           <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
-          <property name="dbsnp-variation.geneSource" value="Ensembl95"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
           <property name="src.data.dir.includes" value="*.vcf"/>
-          <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XIII"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XIII"/>
         </source>        
+
+        <source name="Sscrofa11.1-dbsnp-variation-XIV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9823"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XV"/>
+        </source>
+
+        <source name="Sscrofa11.1-dbsnp-variation-XV" type="dbsnp-variation">
+          <property name="dbsnp-variation.taxonId" value="9823"/>
+          <property name="dbsnp-variation.assemblyVersion" value="Sscrofa11.1"/>
+          <property name="dbsnp-variation.geneSource" value="Ensembl"/>
+          <property name="dbsnp-variation.analysisAccession" value=""/>
+          <property name="src.data.dir.includes" value="*.vcf"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/dbSNP/sus_scrofa/Sscrofa11.1/part_XV"/>
+        </source>
 
 	<!--Genome fasta-->
 	<source name="ARS-UCD1.2_genome_fasta" type="fasta">
@@ -750,7 +1192,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="ARS-UCD1.2"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="UOA_WB_1_genome_fasta" type="fasta">
@@ -762,7 +1204,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="UOA_WB_1"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/bubalus_bubalis/UOA_WB_1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/bubalus_bubalis/UOA_WB_1"/>
 	</source>
 	
 	<source name="CanFam3.1_genome_fasta" type="fasta">
@@ -774,7 +1216,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="CanFam3.1"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/canis_lupus_familiaris/CanFam3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/canis_lupus_familiaris/CanFam3.1"/>
 	</source>
 	
 	<source name="ARS1_genome_fasta" type="fasta">
@@ -786,7 +1228,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="ARS1"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/capra_hircus/ARS1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/capra_hircus/ARS1"/>
 	</source>
 	
 	<source name="EquCab3.0_genome_fasta" type="fasta">
@@ -798,7 +1240,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="EquCab3.0"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/equus_caballus/EquCab3.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/equus_caballus/EquCab3.0"/>
 	</source>
 	
 	<source name="Felis_catus_9.0_genome_fasta" type="fasta">
@@ -810,7 +1252,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="Felis_catus_9.0"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/felis_catus/Felis_catus_9.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/felis_catus/Felis_catus_9.0"/>
 	</source>
 	
 	<source name="GRCg6a_genome_fasta" type="fasta">
@@ -822,7 +1264,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="GRCg6a"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="Oar_v3.1_genome_fasta" type="fasta">
@@ -834,7 +1276,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="Oar_v3.1"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1_genome_fasta" type="fasta">
@@ -846,8 +1288,20 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.assemblyVersion" value="Sscrofa11.1"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineArsFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/genome/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/genome/sus_scrofa/Sscrofa11.1"/>
 	</source>
+
+
+        <!-- chipseq -->
+        <source name="chipseq" type="chipseq-gff">
+          <property name="gff3.taxonId" value="9796"/>
+          <property name="gff3.dataSourceName" value="FAANG"/>
+          <property name="gff3.seqAssemblyVersion" value="EquCab3.0"/>
+          <property name="gff3.dataSetTitle" value="ECA_HIS_ChIP_UCD_ST1"/>
+          <property name="gff3.seqClsName" value="Chromosome"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/chipseq/output_gff"/>
+        </source>
+
 	
 	<!--RefSeq GFF-->
 	<source name="ARS-UCD1.2-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -856,7 +1310,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS-UCD1.2"/>
 	  <property name="gff3.dataSetTitle" value="Bos taurus RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/bos_taurus/ARS-UCD1.2/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/bos_taurus/ARS-UCD1.2/proteincoding"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-noncoding-gff" type="refseq-noncoding-gff">
@@ -865,7 +1319,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS-UCD1.2"/>
 	  <property name="gff3.dataSetTitle" value="Bos taurus RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/bos_taurus/ARS-UCD1.2/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/bos_taurus/ARS-UCD1.2/noncoding"/>
 	</source>
 	
 	<source name="UOA_WB_1-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -874,7 +1328,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="UOA_WB_1"/>
 	  <property name="gff3.dataSetTitle" value="Bubalus bubalis RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/bubalus_bubalis/UOA_WB_1/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/bubalus_bubalis/UOA_WB_1/proteincoding"/>
 	</source>
 	
 	<source name="UOA_WB_1-noncoding-gff" type="refseq-noncoding-gff">
@@ -883,7 +1337,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="UOA_WB_1"/>
 	  <property name="gff3.dataSetTitle" value="Bubalus bubalis RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/bubalus_bubalis/UOA_WB_1/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/bubalus_bubalis/UOA_WB_1/noncoding"/>
 	</source>
 	
 	<source name="CanFam3.1-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -892,7 +1346,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="CanFam3.1"/>
 	  <property name="gff3.dataSetTitle" value="Canis lupus familiaris RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/canis_lupus_familiaris/CanFam3.1/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/canis_lupus_familiaris/CanFam3.1/proteincoding"/>
 	</source>
 	
 	<source name="CanFam3.1-noncoding-gff" type="refseq-noncoding-gff">
@@ -901,7 +1355,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="CanFam3.1"/>
 	  <property name="gff3.dataSetTitle" value="Canis lupus familiaris RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/canis_lupus_familiaris/CanFam3.1/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/canis_lupus_familiaris/CanFam3.1/noncoding"/>
 	</source>
 	
 	<source name="ARS1-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -910,7 +1364,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS1"/>
 	  <property name="gff3.dataSetTitle" value="Capra hircus RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/capra_hircus/ARS1/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/capra_hircus/ARS1/proteincoding"/>
 	</source>
 	
 	<source name="ARS1-noncoding-gff" type="refseq-noncoding-gff">
@@ -919,7 +1373,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS1"/>
 	  <property name="gff3.dataSetTitle" value="Capra hircus RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/capra_hircus/ARS1/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/capra_hircus/ARS1/noncoding"/>
 	</source>
 	
 	<source name="EquCab3.0-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -928,7 +1382,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="EquCab3.0"/>
 	  <property name="gff3.dataSetTitle" value="Equus caballus RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/equus_caballus/EquCab3.0/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/equus_caballus/EquCab3.0/proteincoding"/>
 	</source>
 	
 	<source name="EquCab3.0-noncoding-gff" type="refseq-noncoding-gff">
@@ -937,7 +1391,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="EquCab3.0"/>
 	  <property name="gff3.dataSetTitle" value="Equus caballus RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/equus_caballus/EquCab3.0/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/equus_caballus/EquCab3.0/noncoding"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -946,7 +1400,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Felis_catus_9.0"/>
 	  <property name="gff3.dataSetTitle" value="Felis catus RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/felis_catus/Felis_catus_9.0/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/felis_catus/Felis_catus_9.0/proteincoding"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-noncoding-gff" type="refseq-noncoding-gff">
@@ -955,7 +1409,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Felis_catus_9.0"/>
 	  <property name="gff3.dataSetTitle" value="Felis catus RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/felis_catus/Felis_catus_9.0/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/felis_catus/Felis_catus_9.0/noncoding"/>
 	</source>
 	
 	<source name="GRCg6a-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -964,7 +1418,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="GRCg6a"/>
 	  <property name="gff3.dataSetTitle" value="Gallus gallus RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/gallus_gallus/GRCg6a/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/gallus_gallus/GRCg6a/proteincoding"/>
 	</source>
 	
 	<source name="GRCg6a-noncoding-gff" type="refseq-noncoding-gff">
@@ -973,7 +1427,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="GRCg6a"/>
 	  <property name="gff3.dataSetTitle" value="Gallus gallus RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/gallus_gallus/GRCg6a/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/gallus_gallus/GRCg6a/noncoding"/>
 	</source>
 	
 	<source name="Oar_v3.1-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -982,7 +1436,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Oar_v3.1"/>
 	  <property name="gff3.dataSetTitle" value="Ovis aries RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/ovis_aries/Oar_v3.1/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/ovis_aries/Oar_v3.1/proteincoding"/>
 	</source>
 	
 	<source name="Oar_v3.1-noncoding-gff" type="refseq-noncoding-gff">
@@ -991,7 +1445,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Oar_v3.1"/>
 	  <property name="gff3.dataSetTitle" value="Ovis aries RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/ovis_aries/Oar_v3.1/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/ovis_aries/Oar_v3.1/noncoding"/>
 	</source>
 	
 	<source name="Sscrofa11.1-refseq-coding-gff" type="refseq-proteincoding-gff">
@@ -1000,7 +1454,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Sscrofa11.1"/>
 	  <property name="gff3.dataSetTitle" value="Sus scrofa RefSeq Protein Coding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/sus_scrofa/Sscrofa11.1/proteincoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/sus_scrofa/Sscrofa11.1/proteincoding"/>
 	</source>
 	
 	<source name="Sscrofa11.1-noncoding-gff" type="refseq-noncoding-gff">
@@ -1009,8 +1463,9 @@
 	  <property name="gff3.seqAssemblyVersion" value="Sscrofa11.1"/>
 	  <property name="gff3.dataSetTitle" value="Sus scrofa RefSeq Noncoding Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/annotations/sus_scrofa/Sscrofa11.1/noncoding"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/annotations/sus_scrofa/Sscrofa11.1/noncoding"/>
 	</source>
+
 	
 	<!--Ensembl GFF-->
 	<source name="ARS-UCD1.2-ensembl-gff" type="ensembl-gff">
@@ -1019,7 +1474,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS-UCD1.2"/>
 	  <property name="gff3.dataSetTitle" value="Bos taurus Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="CanFam3.1-ensembl-gff" type="ensembl-gff">
@@ -1028,7 +1483,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="CanFam3.1"/>
 	  <property name="gff3.dataSetTitle" value="Canis lupus familiaris Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/canis_lupus_familiaris/CanFam3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/canis_lupus_familiaris/CanFam3.1"/>
 	</source>
 	
 	<source name="ARS1-ensembl-gff" type="ensembl-gff">
@@ -1037,7 +1492,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS1"/>
 	  <property name="gff3.dataSetTitle" value="Capra hircus Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/capra_hircus/ARS1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/capra_hircus/ARS1"/>
 	</source>
 	
 	<source name="EquCab3.0-ensembl-gff" type="ensembl-gff">
@@ -1046,7 +1501,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="EquCab3.0"/>
 	  <property name="gff3.dataSetTitle" value="Equus caballus Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/equus_caballus/EquCab3.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/equus_caballus/EquCab3.0"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-ensembl-gff" type="ensembl-gff">
@@ -1055,7 +1510,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Felis_catus_9.0"/>
 	  <property name="gff3.dataSetTitle" value="Felis catus Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/felis_catus/Felis_catus_9.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/felis_catus/Felis_catus_9.0"/>
 	</source>
 	
 	<source name="GRCg6a-ensembl-gff" type="ensembl-gff">
@@ -1064,7 +1519,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="GRCg6a"/>
 	  <property name="gff3.dataSetTitle" value="Gallus gallus Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="Oar_v3.1-ensembl-gff" type="ensembl-gff">
@@ -1073,7 +1528,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Oar_v3.1"/>
 	  <property name="gff3.dataSetTitle" value="Ovis aries Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1-ensembl-gff" type="ensembl-gff">
@@ -1082,7 +1537,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Sscrofa11.1"/>
 	  <property name="gff3.dataSetTitle" value="Sus scrofa Ensembl Genes"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/annotations/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/annotations/sus_scrofa/Sscrofa11.1"/>
 	</source>
 
 	<!--QTL gff-->
@@ -1092,7 +1547,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS-UCD1.2"/>
 	  <property name="gff3.dataSetTitle" value="Bos taurus QTL from Animal QTLdb"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/QTL/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/QTL/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="GRCg6a-qtl-gff" type="qtl-gff">
@@ -1101,7 +1556,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="GRCg6a"/>
 	  <property name="gff3.dataSetTitle" value="Gallus gallus QTL from Animal QTLdb"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/QTL/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/QTL/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="Oar_v3.1-qtl-gff" type="qtl-gff">
@@ -1110,7 +1565,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Oar_v3.1"/>
 	  <property name="gff3.dataSetTitle" value="Ovis aries QTL from Animal QTLdb"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/QTL/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/QTL/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1-qtl-gff" type="qtl-gff">
@@ -1119,8 +1574,9 @@
 	  <property name="gff3.seqAssemblyVersion" value="Sscrofa11.1"/>
 	  <property name="gff3.dataSetTitle" value="Sus scrofa QTL from Animal QTLdb"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/QTL/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/QTL/sus_scrofa/Sscrofa11.1"/>
 	</source>
+
 
 	<!--RefSeq CDS and Protein Fasta-->
 	<source name="ARS-UCD1.2-cds-refseq" type="fasta">
@@ -1133,7 +1589,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-protein-refseq" type="fasta">
@@ -1146,7 +1602,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="UOA_WB_1-cds-refseq" type="fasta">
@@ -1159,7 +1615,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/bubalus_bubalis/UOA_WB_1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/bubalus_bubalis/UOA_WB_1"/>
 	</source>
 	
 	<source name="UOA_WB_1-protein-refseq" type="fasta">
@@ -1172,7 +1628,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/bubalus_bubalis/UOA_WB_1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/bubalus_bubalis/UOA_WB_1"/>
 	</source>
 	
 	<source name="CanFam3.1-cds-refseq" type="fasta">
@@ -1185,7 +1641,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/canis_lupus_familiaris/CanFam3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/canis_lupus_familiaris/CanFam3.1"/>
 	</source>
 	
 	<source name="CanFam3.1-protein-refseq" type="fasta">
@@ -1198,7 +1654,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/canis_lupus_familiaris/CanFam3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/canis_lupus_familiaris/CanFam3.1"/>
 	</source>
 	
 	<source name="ARS1-cds-refseq" type="fasta">
@@ -1211,7 +1667,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/capra_hircus/ARS1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/capra_hircus/ARS1"/>
 	</source>
 	
 	<source name="ARS1-protein-refseq" type="fasta">
@@ -1224,7 +1680,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/capra_hircus/ARS1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/capra_hircus/ARS1"/>
 	</source>
 	
 	<source name="EquCab3.0-cds-refseq" type="fasta">
@@ -1237,7 +1693,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/equus_caballus/EquCab3.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/equus_caballus/EquCab3.0"/>
 	</source>
 	
 	<source name="EquCab3.0-protein-refseq" type="fasta">
@@ -1250,7 +1706,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/equus_caballus/EquCab3.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/equus_caballus/EquCab3.0"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-cds-refseq" type="fasta">
@@ -1263,7 +1719,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/felis_catus/Felis_catus_9.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/felis_catus/Felis_catus_9.0"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-protein-refseq" type="fasta">
@@ -1276,7 +1732,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/felis_catus/Felis_catus_9.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/felis_catus/Felis_catus_9.0"/>
 	</source>
 	
 	<source name="GRCg6a-cds-refseq" type="fasta">
@@ -1289,7 +1745,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="GRCg6a-protein-refseq" type="fasta">
@@ -1302,7 +1758,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="Oar_v3.1-cds-refseq" type="fasta">
@@ -1315,7 +1771,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Oar_v3.1-protein-refseq" type="fasta">
@@ -1328,7 +1784,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1-cds-refseq" type="fasta">
@@ -1341,7 +1797,7 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/cds_fasta/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/cds_fasta/sus_scrofa/Sscrofa11.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1-protein-refseq" type="fasta">
@@ -1354,8 +1810,9 @@
 	  <property name="fasta.includes" value="*.fa"/>
 	  <property name="fasta.geneSource" value="RefSeq"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/RefSeq/protein_fasta/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/RefSeq/protein_fasta/sus_scrofa/Sscrofa11.1"/>
 	</source>
+
 
 	<!--Ensembl CDS and Protein Fasta-->
 	<source name="ARS-UCD1.2-cds-ensembl" type="fasta">
@@ -1366,9 +1823,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="ARS-UCD1.2-protein-ensembl" type="fasta">
@@ -1379,9 +1836,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="CanFam3.1-cds-ensembl" type="fasta">
@@ -1392,9 +1849,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/canis_lupus_familiaris/CanFam3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/canis_lupus_familiaris/CanFam3.1"/>
 	</source>
 	
 	<source name="CanFam3.1-protein-ensembl" type="fasta">
@@ -1405,9 +1862,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/canis_lupus_familiaris/CanFam3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/canis_lupus_familiaris/CanFam3.1"/>
 	</source>
 	
 	<source name="ARS1-cds-ensembl" type="fasta">
@@ -1418,9 +1875,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/capra_hircus/ARS1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/capra_hircus/ARS1"/>
 	</source>
 	
 	<source name="ARS1-protein-ensembl" type="fasta">
@@ -1431,9 +1888,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/capra_hircus/ARS1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/capra_hircus/ARS1"/>
 	</source>
 	
 	<source name="EquCab3.0-cds-ensembl" type="fasta">
@@ -1444,9 +1901,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/equus_caballus/EquCab3.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/equus_caballus/EquCab3.0"/>
 	</source>
 	
 	<source name="EquCab3.0-protein-ensembl" type="fasta">
@@ -1457,9 +1914,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/equus_caballus/EquCab3.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/equus_caballus/EquCab3.0"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-cds-ensembl" type="fasta">
@@ -1470,9 +1927,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/felis_catus/Felis_catus_9.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/felis_catus/Felis_catus_9.0"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-protein-ensembl" type="fasta">
@@ -1483,9 +1940,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/felis_catus/Felis_catus_9.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/felis_catus/Felis_catus_9.0"/>
 	</source>
 	
 	<source name="GRCg6a-cds-ensembl" type="fasta">
@@ -1496,9 +1953,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="GRCg6a-protein-ensembl" type="fasta">
@@ -1509,9 +1966,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="Oar_v3.1-cds-ensembl" type="fasta">
@@ -1522,9 +1979,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Oar_v3.1-protein-ensembl" type="fasta">
@@ -1535,9 +1992,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1-cds-ensembl" type="fasta">
@@ -1548,9 +2005,9 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="dna"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineCDSFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/cds_fasta/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/cds_fasta/sus_scrofa/Sscrofa11.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1-protein-ensembl" type="fasta">
@@ -1561,45 +2018,215 @@
 	  <property name="fasta.classAttribute" value="primaryIdentifier"/>
 	  <property name="fasta.sequenceType" value="protein"/>
 	  <property name="fasta.includes" value="*.fa"/>
-	  <property name="fasta.geneSource" value="Ensembl95"/>
+	  <property name="fasta.geneSource" value="Ensembl"/>
 	  <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.BovineProteinFastaLoaderTask"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Ensembl/protein_fasta/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Ensembl/protein_fasta/sus_scrofa/Sscrofa11.1"/>
 	</source>
 
 
 	<!--Xrefs-->
         <source name="bovine-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/bos_taurus/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/bos_taurus/"/>
             <property name="taxonId" value="9913"/>
         </source>
         <source name="goat-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/capra_hircus/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/capra_hircus/"/>
             <property name="taxonId" value="9925"/>
         </source>
         <source name="sheep-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/ovis_aries/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/ovis_aries/"/>
             <property name="taxonId" value="9940"/>
         </source>
         <source name="cat-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/felis_catus/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/felis_catus/"/>
             <property name="taxonId" value="9685"/>
         </source>
         <source name="dog-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/canis_lupus_familiaris/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/canis_lupus_familiaris/"/>
             <property name="taxonId" value="9615"/>
         </source>
         <source name="horse-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/equus_caballus/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/equus_caballus/"/>
             <property name="taxonId" value="9796"/>
         </source>
         <source name="chicken-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/gallus_gallus/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/gallus_gallus/"/>
             <property name="taxonId" value="9031"/>
         </source>
         <source name="pig-xref" type="cross-references">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/xref/sus_scrofa/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/xref/sus_scrofa/"/>
             <property name="taxonId" value="9823"/>
         </source>
+
+
+        <!-- Experiment -->
+        <source name="ARS-UCD1.2-experiment" type="experiment">
+          <property name="taxonId" value="9913"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/bos_taurus"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+        <source name="UOA_WB_1-experiment" type="experiment">
+          <property name="taxonId" value="89462"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/bubalus_bubalis"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+        <source name="CanFam3.1-experiment" type="experiment">
+          <property name="taxonId" value="9615"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/canis_lupus_familiaris"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+        <source name="ARS1-experiment" type="experiment">
+          <property name="taxonId" value="9925"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/capra_hircus"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+        <source name="EquCab3.0-experiment" type="experiment">
+          <property name="taxonId" value="9796"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/equus_caballus"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+       <source name="Felis_catus_9.0-experiment" type="experiment">
+          <property name="taxonId" value="9685"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/felis_catus"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+       <source name="GRCg6a-experiment" type="experiment">
+          <property name="taxonId" value="9031"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/gallus_gallus"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+       <source name="Oar_v3.1-experiment" type="experiment">
+          <property name="taxonId" value="9940"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/ovis_aries"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+       <source name="Sscrofa11.1-experiment" type="experiment">
+          <property name="taxonId" value="9823"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/experiment/sus_scrofa"/>
+          <property name="src.data.dir.includes" value="*.txt"/>
+        </source>
+
+
+        <!-- Gene expression -->
+        <source name="ARS-UCD1.2-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9913"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/bos_taurus/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="ARS-UCD1.2-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9913"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/bos_taurus/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="UOA_WB_1-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="89462"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/bubalus_bubalis/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="CanFam3.1-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9615"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/canis_lupus_familiaris/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="CanFam3.1-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9615"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/canis_lupus_familiaris/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="ARS1-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9925"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/capra_hircus/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="ARS1-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9925"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/capra_hircus/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="EquCab3.0-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9796"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/equus_caballus/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="EquCab3.0-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9796"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/equus_caballus/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="Felis_catus_9.0-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9685"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/felis_catus/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="Felis_catus_9.0-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9685"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/felis_catus/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="GRCg6a-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9031"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/gallus_gallus/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="GRCg6a-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9031"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/gallus_gallus/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="Oar_v3.1-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9940"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/ovis_aries/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="Oar_v3.1-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9940"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/ovis_aries/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
+        <source name="Sscrofa11.1-rnaseq-expression-for-refseq" type="gene-expression">
+          <property name="geneSource" value="RefSeq"/>
+          <property name="taxonId" value="9823"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/sus_scrofa/RefSeq"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+        <source name="Sscrofa11.1-rnaseq-expression-for-ensembl" type="gene-expression">
+          <property name="geneSource" value="Ensembl"/>
+          <property name="taxonId" value="9823"/>
+          <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/gene_expression/sus_scrofa/Ensembl"/>
+          <property name="src.data.dir.includes" value="*.tab"/>
+        </source>
+
 
 	<!-- Repeat Regions-->
 	<source name="ARS-UCD1.2-repeat-region" type="repeat-region-gff">
@@ -1608,7 +2235,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS-UCD1.2"/>
 	  <property name="gff3.dataSetTitle" value="Bos taurus RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/bos_taurus/ARS-UCD1.2"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/bos_taurus/ARS-UCD1.2"/>
 	</source>
 	
 	<source name="UOA_WB_1-repeat-region" type="repeat-region-gff">
@@ -1617,7 +2244,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="UOA_WB_1"/>
 	  <property name="gff3.dataSetTitle" value="Bubalus bubalis RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/bubalus_bubalis/UOA_WB_1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/bubalus_bubalis/UOA_WB_1"/>
 	</source>
 	
 	<source name="CanFam3.1-repeat-region" type="repeat-region-gff">
@@ -1626,7 +2253,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="CanFam3.1"/>
 	  <property name="gff3.dataSetTitle" value="Canis lupus familiaris RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/canis_lupus_familiaris/CanFam3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/canis_lupus_familiaris/CanFam3.1"/>
 	</source>
 	
 	<source name="ARS1-repeat-region" type="repeat-region-gff">
@@ -1635,7 +2262,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="ARS1"/>
 	  <property name="gff3.dataSetTitle" value="Capra hircus RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/capra_hircus/ARS1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/capra_hircus/ARS1"/>
 	</source>
 	
 	<source name="EquCab3.0-repeat-region" type="repeat-region-gff">
@@ -1644,7 +2271,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="EquCab3.0"/>
 	  <property name="gff3.dataSetTitle" value="Equus caballus RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/equus_caballus/EquCab3.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/equus_caballus/EquCab3.0"/>
 	</source>
 	
 	<source name="Felis_catus_9.0-repeat-region" type="repeat-region-gff">
@@ -1653,7 +2280,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Felis_catus_9.0"/>
 	  <property name="gff3.dataSetTitle" value="Felis catus RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/felis_catus/Felis_catus_9.0"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/felis_catus/Felis_catus_9.0"/>
 	</source>
 	
 	<source name="GRCg6a-repeat-region" type="repeat-region-gff">
@@ -1662,7 +2289,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="GRCg6a"/>
 	  <property name="gff3.dataSetTitle" value="Gallus gallus RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/gallus_gallus/GRCg6a"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/gallus_gallus/GRCg6a"/>
 	</source>
 	
 	<source name="Oar_v3.1-repeat-region" type="repeat-region-gff">
@@ -1671,7 +2298,7 @@
 	  <property name="gff3.seqAssemblyVersion" value="Oar_v3.1"/>
 	  <property name="gff3.dataSetTitle" value="Ovis aries RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/ovis_aries/Oar_v3.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/ovis_aries/Oar_v3.1"/>
 	</source>
 	
 	<source name="Sscrofa11.1-repeat-region" type="repeat-region-gff">
@@ -1680,31 +2307,32 @@
 	  <property name="gff3.seqAssemblyVersion" value="Sscrofa11.1"/>
 	  <property name="gff3.dataSetTitle" value="Sus scrofa RepeatMasker"/>
 	  <property name="gff3.seqClsName" value="Chromosome"/>
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/repeat-region-gff/sus_scrofa/Sscrofa11.1"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/repeat-region-gff/sus_scrofa/Sscrofa11.1"/>
 	</source>
+
 
 	<!--Uniprot-->
         <source name="uniprot-first" type="uniprot" >
             <property name="uniprot.organisms" value="9913 9606 10090 10116 9925 9940 9823 89462 9031 9615 9685 9796"/>
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/UniProt"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/UniProt"/>
             <property name="creatego" value="true"/>
             <property name="allowduplicates" value="false"/>
-            <property name="loadfragments" value="false"/>
+            <property name="loadfragments" value="true"/>
             <property name="loadtrembl" value="true"/>
         </source>
 
 	<source name="uniprot-sec" type="uniprot" >
             <property name="uniprot.organisms" value="9913 9606 10090 10116 9940 9823 9031 9615 9685 9796"/>
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/UniProt"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/UniProt"/>
             <property name="creatego" value="true"/>
             <property name="allowduplicates" value="false"/>
-            <property name="loadfragments" value="false"/>
+            <property name="loadfragments" value="true"/>
             <property name="loadtrembl" value="true"/>
         </source>
 
 
         <source name="uniprot-keywords" type="uniprot-keywords">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/UniProt"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/UniProt"/>
             <property name="src.data.dir.includes" value="keywlist.xml"/>
         </source>
 
@@ -1714,73 +2342,114 @@
             <property name="fasta.classAttribute" value="primaryAccession"/>
             <property name="fasta.dataSourceName" value="UniProt Fasta"/>
             <property name="fasta.dataSetTitle" value="Fasta sequence for proteins from UniProt"/>
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/UniProt/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/UniProt/"/>
             <property name="fasta.includes" value="uniprot_sprot_varsplic.fasta"/>
             <property name="fasta.sequenceType" value="protein" />
             <property name="fasta.loaderClassName" value="org.intermine.bio.dataconversion.UniProtFastaLoaderTask"/>
         </source>
 
+
 	<!--InterPro-->
         <source name="interpro" type="interpro">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/InterPro"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/InterPro"/>
         </source>
+
 
 	<!--Protein2ipr-->
         <source name="protein2ipr" type="protein2ipr">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/protein2ipr"/>
-            <property name="src.data.dir.includes" value="protein2ipr_v72_03212019.dat"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/protein2ipr"/>
+            <property name="src.data.dir.includes" value="protein2ipr_v79_May2020.dat"/>
             <property name="protein2ipr.organisms" value="9913 9606 10090 10116 9925 9940 9823 89462 9031 9615 9685 9796"/>
         </source>
 
+
 	<!--GO Annotation Do not load in first release
                <source name="go-annotation" type="go-annotation">
-		 <property name="ontologyfile" location="/db/FAANGMine_release_1.1_april2019/datasets/GO/go-basic.obo"/>
-		 <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/GO-annotation/"/>
+		 <property name="ontologyfile" location="/db/FAANGMine_release_v1.2/datasets/GO/go-basic.obo"/>
+		 <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/GO-annotation/"/>
                </source>
 	       -->
         
 	<!--Reactome-->
 	<source name="reactome" type="reactome">
-	  <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/Reactome"/>
+	  <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/Reactome"/>
           <property name="reactome.organisms" value="9913 9606 10090 10116 9925 9940 9823 89462 9031 9615 9685 9796"/>
         </source>
 	
 
 	<!--Pubmed-->
+        <!-- Command to quickly get list of taxon IDs in .tab file:
+             awk '{ a[$1]++ } END { for (b in a) { print b } }' [filename]
+        -->
         <source name="ncbi-pubmed-gene" type="pubmed-gene">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/ncbi-pubmed-gene/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/ncbi-pubmed-gene/"/>
             <property name="src.data.dir.includes" value="*"/>
             <property name="pubmed.organisms" value="9913 9940 9925"/>
 	    <property name="geneSource" value="RefSeq"/>
         </source>
         <source name="ensembl-pubmed-gene" type="pubmed-gene">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/ensembl-pubmed-gene/"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/ensembl-pubmed-gene/"/>
             <property name="src.data.dir.includes" value="*"/>
             <property name="pubmed.organisms" value="9913 9940 9925"/>
-	    <property name="geneSource" value="Ensembl95"/>
+	    <property name="geneSource" value="Ensembl"/>
+        </source>
+
+
+        <!--
+             Pubmed reload
+             DO NOT INCLUDE IN FUTURE RELEASES OF FAANGMINE!
+             This is an attempt to add in ncbi-/ensembl-pubmed-gene data for taxon IDs that were left out above.
+         -->
+
+        <!-- ncbi-pubmed-gene-reload: Only load new taxon IDs that were left out before, MINUS HUMAN + MOUSE + RAT (9606, 10090, 10116) -->
+        <source name="ncbi-pubmed-gene-reload" type="pubmed-gene">
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/ncbi-pubmed-gene"/>
+            <property name="src.data.dir.includes" value="*"/>
+            <property name="pubmed.organisms" value="9685 9031 9823 89462 9615 9796"/>
+            <property name="geneSource" value="RefSeq"/>
+        </source>
+
+        <!-- ncbi-pubmed-gene-additions: Load for all taxon IDs (except human + mouse + rat) - these pubs were accidentally left out before -->
+        <source name="ncbi-pubmed-gene-additions" type="pubmed-gene">
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/ncbi-pubmed-gene/additions"/>
+            <property name="src.data.dir.includes" value="*"/>
+            <property name="pubmed.organisms" value="9685 9031 9823 89462 9615 9796 9913 9940 9925"/>
+            <property name="geneSource" value="RefSeq"/>
+        </source>
+
+        <!-- ensembl-pubmed-gene-reload: Load for all taxon IDs (except human + mouse + rat), including those above (since they didn't load correctly first time)  -->
+        <source name="ensembl-pubmed-gene-reload" type="pubmed-gene">
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/ensembl-pubmed-gene/corrected_files"/>
+            <property name="src.data.dir.includes" value="*"/>
+            <property name="pubmed.organisms" value="9031 9685 9823 9940 9615 9913 9796 9925"/>
+            <property name="geneSource" value="Ensembl"/>
         </source>
 
 
 	<!--Ensembl Compara-->
         <source name="ensembl-compara" type="ensembl-compara">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/EnsemblCompara"/>
-            <property name="ensemblcompara.version" value="Ensembl95"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/EnsemblCompara"/>
+            <property name="ensemblcompara.version" value="Ensembl"/>
             <property name="ensemblcompara.organisms" value="9913 9606 10090 10116 9925 9940 9823 9031 9615 9685 9796"/>
             <property name="ensemblcompara.homologues" value="9913 9606 10090 10116 9925 9940 9823 9031 9615 9685 9796"/>
-            <property name="geneSource" value="Ensembl95"/>
+            <property name="geneSource" value="Ensembl"/>
 	</source>
 
+
 	<!--TreeFam-->
+        <!--
         <source name="treefam-extended" type="treefam-extended">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/TreeFam"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/TreeFam"/>
             <property name="version" value="Release 9"/>
-            <property name="geneSource" value="Ensembl95"/>
+            <property name="geneSource" value="Ensembl"/>
         </source>
+        -->
 
 
 	<!--OrthoDB-->
+        <!-- Data file(s) must be sorted on column 2 before loading! -->
         <source name="orthodb" type="orthodb">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/OrthoDB"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/OrthoDB"/>
             <property name="orthodb.version" value="OrthoDB release 10"/>
             <property name="orthodb.organisms" value="9913 9606 10090 10116 9925 9940 9615 9796 9823 9685 89462 9031"/>
             <property name="orthodb.homologues" value="9913 9606 10090 10116 9925 9940 9615 9796 9823 9685 89462 9031"/>
@@ -1788,7 +2457,7 @@
         </source>
 	<!--
         <source name="orthodb-mammalia" type="orthodb">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/OrthoDB/Mammalia"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/OrthoDB/Mammalia"/>
             <property name="orthodb.version" value="OrthoDB release 10"/>
             <property name="orthodb.organisms" value="9913 9606 10090 10116 9925 9940 9615 9796 9823 9685 89462"/>
             <property name="orthodb.homologues" value="9913 9606 10090 10116 9925 9940 9615 9796 9823 9685 89462"/>
@@ -1796,7 +2465,7 @@
         </source>
 
         <source name="orthodb-tetrapoda" type="orthodb">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/OrthoDB/Tetrapoda"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/OrthoDB/Tetrapoda"/>
             <property name="orthodb.version" value="OrthoDB release 10"/>
             <property name="orthodb.organisms" value="9913 9606 10090 10116 9925 9940 9615 9796 9823 9685 89462 9031"/>
             <property name="orthodb.homologues" value="9913 9606 10090 10116 9925 9940 9615 9796 9823 9685 89462 9031"/>
@@ -1804,50 +2473,60 @@
         </source>
 	-->
 
+	<!-- OMIM -->
+	<source name="omim" type="omim">
+  	    <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/omim"/>
+	</source>
+
 
 	<!--BioGrid-->
 	<source name="bovine-biogrid" type="biogrid">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/biogrid"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/biogrid"/>
             <property name="src.data.dir.includes" value="*psi25.xml"/>
             <property name="biogrid.organisms" value="9913 9606 10090 10116 9940 9615 9796 9031 9823"/>
             <property name="geneSource" value="RefSeq"/>        
 	</source>
+
         
 	<!--PSI IntAct-->
 	<source name="psi-intact" type="psi">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/IntAct"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/IntAct"/>
             <property name="intact.organisms" value="9913 9606 9796 9615 10090 10116 9823 9940 9925"/>
-            <property name="geneSource" value="Ensembl95"/>        
+            <property name="geneSource" value="Ensembl"/>        
 	</source>
+
 
 	<!--KEGG pathway-->
         <source name="kegg" type="kegg-pathway">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/KEGG"/>
-            <property name="kegg.organisms" value="9913 9606 10090 10116 9925 9940 9823 9031 9615 9685 9796"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/KEGG"/>
+            <property name="kegg.organisms" value="9913 9606 10090 10116 9925 9940 9823 9031 9615 9685 9796 89462"/>
 	    <property name="geneSource" value="RefSeq"/>        
         </source>
 
 	<!--
         <source name="kegg-sec" type="kegg-pathway">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/KEGG"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/KEGG"/>
             <property name="kegg.organisms" value="9913 9606 10090 10116 9823 9940 9925 9796 9031"/>
         </source>
         <source name="kegg-ter" type="kegg-pathway">
-            <property name="src.data.dir" location="/db/FAANGMine_release_1.1_april2019/datasets/KEGG"/>
+            <property name="src.data.dir" location="/db/FAANGMine_release_v1.2/datasets/KEGG"/>
             <property name="kegg.organisms" value="9913 9606 10090 10116 9823 9940 9925 9796 9031"/>
         </source>
 	-->
    
+
 	<!--Organism-->
         <source name="entrez-organism" type="entrez-organism">
             <property name="src.data.file" location="build/organisms.xml"/>
         </source>
+
 
 	<!--Update Publications-->
         <source name="update-publications" type="update-publications">
             <property name="src.data.file" location="build/publications.xml"/>
             <property name="loadFullRecord" value="true"/>
         </source>
+
     </sources>
 
     <post-processing>

@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.tools.ant.BuildException;
 import org.intermine.bio.web.model.ChromosomeInfo;
@@ -31,6 +33,8 @@ import org.intermine.model.bio.Chromosome;
 import org.intermine.model.bio.Location;
 import org.intermine.model.bio.Organism;
 import org.intermine.model.bio.SequenceFeature;
+import org.intermine.model.bio.Analysis;
+import org.intermine.model.bio.BioProject;
 import org.intermine.objectstore.query.BagConstraint;
 import org.intermine.objectstore.query.ConstraintSet;
 import org.intermine.objectstore.query.ContainsConstraint;
@@ -40,6 +44,7 @@ import org.intermine.objectstore.query.Query;
 import org.intermine.objectstore.query.QueryClass;
 import org.intermine.objectstore.query.QueryField;
 import org.intermine.objectstore.query.QueryObjectReference;
+import org.intermine.objectstore.query.QueryCollectionReference;
 import org.intermine.objectstore.query.QueryValue;
 import org.intermine.objectstore.query.SimpleConstraint;
 import org.intermine.web.logic.session.SessionMethods;
@@ -59,6 +64,8 @@ public final class GenomicRegionSearchUtil
         Pattern.compile("[^:]+: ?\\d+\\-\\d+$"); // "chr:start-end"
     private static final Pattern SINGLE_POS =
         Pattern.compile("[^:]+: ?\\d+$"); // "chr:singlePosition" - [^:]+:[\d]+$
+
+    private static final Logger LOG = Logger.getLogger(GenomicRegionSearchUtil.class);
 
     private GenomicRegionSearchUtil() {
 
@@ -234,15 +241,18 @@ public final class GenomicRegionSearchUtil
      * @param genomicRegions list of gr
      * @param extension the flanking
      * @param organismName org short name
+     * @param categories list of project categories
+     * @param analyses list of analyses (titles)
      * @param featureTypes ft
      * @param strandSpecific flag
      * @return map of gr-query
      */
     public static Map<GenomicRegion, Query> createQueryList(
             Collection<GenomicRegion> genomicRegions, int extension, String organismName,
-            Set<Class<?>> featureTypes, boolean strandSpecific) {
-        return createRegionQueries(genomicRegions, extension, organismName, featureTypes,
-                strandSpecific, false);
+            List<String> categories, List<String> analyses, Set<Class<?>> featureTypes, 
+            boolean strandSpecific) {
+        return createRegionQueries(genomicRegions, extension, organismName, categories,
+                analyses, featureTypes, strandSpecific, false);
     }
 
     /**
@@ -252,22 +262,28 @@ public final class GenomicRegionSearchUtil
      * @param extension the flanking
      * @param chromInfo chr info map
      * @param organismName org short name
+     * @param categories list of categories
+     * @param analyses list of analyses (titles)
      * @param featureTypes ft
      * @param strandSpecific flag
      * @return map of gr-query
      */
     public static Map<GenomicRegion, Query> createRegionListQueries(
         Collection<GenomicRegion> genomicRegions, int extension,
-        Map<String, ChromosomeInfo> chromInfo, String organismName, Set<Class<?>> featureTypes,
-        boolean strandSpecific) {
-        return createRegionQueries(genomicRegions, extension, organismName, featureTypes,
-                strandSpecific, true);
+        Map<String, ChromosomeInfo> chromInfo, String organismName, List<String> categories,
+        List<String> analyses, Set<Class<?>> featureTypes, boolean strandSpecific) {
+        return createRegionQueries(genomicRegions, extension, organismName, categories,
+                analyses, featureTypes, strandSpecific, true);
     }
 
     private static Map<GenomicRegion, Query> createRegionQueries(
             Collection<GenomicRegion> genomicRegions, int extension, String organismName,
-            Set<Class<?>> featureTypes, boolean strandSpecific, boolean idOnly) {
+            List<String> categories, List<String> analyses, Set<Class<?>> featureTypes, 
+            boolean strandSpecific, boolean idOnly) {
         Map<GenomicRegion, Query> queryMap = new LinkedHashMap<GenomicRegion, Query>();
+
+        // Some queries don't involve analysis table, check first
+        boolean hasAnalyses = (analyses != null) && !(analyses.isEmpty());
 
         for (GenomicRegion aSpan : genomicRegions) {
             Integer start;
@@ -292,6 +308,8 @@ public final class GenomicRegionSearchUtil
             QueryClass qcChr = new QueryClass(Chromosome.class);
             QueryClass qcFeature = new QueryClass(SequenceFeature.class);
             QueryClass qcLoc = new QueryClass(Location.class);
+            QueryClass qcSub = new QueryClass(Analysis.class);
+            QueryClass qcProj = new QueryClass(BioProject.class);
 
             QueryField qfOrgName = new QueryField(qcOrg, "shortName");
 
@@ -307,11 +325,18 @@ public final class GenomicRegionSearchUtil
             QueryField qfLocEnd = new QueryField(qcLoc, "end");
             QueryField qfLocStrand = new QueryField(qcLoc, "strand");
 
+            QueryField qfSubTitle = new QueryField(qcSub, "title");
+            QueryField qfProjCat = new QueryField(qcProj, "category");
+
             q.addToSelect(qfFeatureId);
             q.addFrom(qcFeature);
             q.addFrom(qcChr);
             q.addFrom(qcOrg);
             q.addFrom(qcLoc);
+            if (hasAnalyses) {
+                q.addFrom(qcSub);
+                q.addFrom(qcProj);
+            }
             if (!idOnly) {
                 q.addToSelect(qfFeaturePID);
                 q.addToSelect(qfFeatureSymbol);
@@ -321,6 +346,10 @@ public final class GenomicRegionSearchUtil
                 q.addToSelect(qfLocStart);
                 q.addToSelect(qfLocEnd);
                 q.addToSelect(qfLocStrand);
+                if (hasAnalyses) {
+                    q.addToSelect(qfSubTitle);
+                    q.addToSelect(qfProjCat);
+                }
                 q.addToOrderBy(qfLocStart, "ascending");
             }
 
@@ -383,6 +412,24 @@ public final class GenomicRegionSearchUtil
                     overlapFeature);
             constraints.addConstraint(oc);
 
+            // If also querying analyses:
+            if (hasAnalyses) {
+                // Analysis.bioProject = BioProject
+                QueryObjectReference bioProject = new QueryObjectReference(qcSub, "bioProject");
+                ContainsConstraint ccProj = new ContainsConstraint(bioProject, ConstraintOp.CONTAINS, qcProj);
+                constraints.addConstraint(ccProj);
+
+                // Features.analysis contains Analysis
+                QueryCollectionReference analysis = new QueryCollectionReference(qcFeature, "analyses");
+                ContainsConstraint ccSub = new ContainsConstraint(analysis, ConstraintOp.CONTAINS, qcSub);
+                constraints.addConstraint(ccSub);
+
+                // BioProject.category in a list (similar to featureTypes list)
+                constraints.addConstraint(new BagConstraint(qfProjCat, ConstraintOp.IN, categories));
+
+                // Analysis.title in a list
+                constraints.addConstraint(new BagConstraint(qfSubTitle, ConstraintOp.IN, analyses));
+            }
             queryMap.put(aSpan, q);
         }
 

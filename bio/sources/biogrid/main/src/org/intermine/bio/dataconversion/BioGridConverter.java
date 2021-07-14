@@ -194,6 +194,7 @@ public class BioGridConverter extends BioFileConverter
             Config config = configs.get(taxonId);
             if (config == null) {
                 config = new Config();
+                System.out.println("Adding config for taxon ID: " + taxonId);
                 configs.put(taxonId, config);
             }
             if ("xref".equals(attributes[1])) {
@@ -348,6 +349,7 @@ public class BioGridConverter extends BioFileConverter
 
                     Config config = configs.get(taxId);
                     if (config == null) {
+                        System.out.println("No config found for taxon ID " + taxId);
                         if (taxonIds.contains(taxId)) {
                             throw new RuntimeException("Entry in configuration file for " + taxId
                                 + " not found");

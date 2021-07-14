@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -74,6 +75,8 @@ public class GenomicRegionSearchAjaxAction extends Action
     private WebConfig webConfig;
     private Profile profile;
     private InterMineAPI api;
+
+    private static final Logger LOG = Logger.getLogger(GenomicRegionSearchAjaxAction.class);
 
     @SuppressWarnings("unchecked")
     private void init(HttpServletRequest request, HttpServletResponse response) {
@@ -224,17 +227,22 @@ public class GenomicRegionSearchAjaxAction extends Action
 
         // get span list from spanConstraintMap in the session
         List<GenomicRegion> genomicRegionList = null;
+        boolean hasAnalyses = false;
         for (Entry<GenomicRegionSearchConstraint, String> e : spanConstraintMap
                 .entrySet()) {
             if (e.getValue().equals(spanUUIDString)) {
                 genomicRegionList = e.getKey().getGenomicRegionList();
+                hasAnalyses = e.getKey().hasAnalyses();
             }
         }
+        LOG.info("GenomicRegionSearchConstraint has analyses:");
+        LOG.info(hasAnalyses);
 
         String htmlStr = grsService.convertResultMapToHTML(
                 spanOverlapFullResultMap.get(spanUUIDString),
                 spanOverlapFullStatMap.get(spanUUIDString),
-                genomicRegionList, fromIdx, toIdx, session);
+                genomicRegionList, fromIdx, toIdx, session,
+                hasAnalyses);
 
         out.println(htmlStr);
 
@@ -249,10 +257,22 @@ public class GenomicRegionSearchAjaxAction extends Action
         // Parse region string to a list of genomic region objects
         List<GenomicRegion> grList = GenomicRegionSearchUtil.generateGenomicRegions(regionSet);
 
+        LOG.info("grList:");
+        LOG.info(grList);
+        
+        boolean hasAnalyses = false;
+        for (Entry<GenomicRegionSearchConstraint, String> e : spanConstraintMap
+                .entrySet()) {
+            if (e.getValue().equals(spanUUIDString)) {
+                hasAnalyses = e.getKey().hasAnalyses();
+            }
+        }
+        LOG.info("getDataByRegions has analyses:");
+        LOG.info(hasAnalyses);
         String htmlStr = grsService.convertResultMapToHTML(
                 spanOverlapFullResultMap.get(spanUUIDString),
                 spanOverlapFullStatMap.get(spanUUIDString),
-                grList, 0, grList.size() - 1, session);
+                grList, 0, grList.size() - 1, session, hasAnalyses);
 
         out.println(htmlStr);
 
@@ -295,9 +315,26 @@ public class GenomicRegionSearchAjaxAction extends Action
             // parse export rows
             List<List<String>> exportResults = new ArrayList<List<String>>();
 
-            String[] hearderArr = {"DB identifier", "Symbol", "Chr",
-                "Start", "End", "User input"};
-            List<String> headerList = new ArrayList<String>(Arrays.asList(hearderArr));
+            // Analyses present?
+            boolean hasAnalyses = false;
+            for (Entry<GenomicRegionSearchConstraint, String> e : spanConstraintMap.entrySet()) {
+                if (e.getValue().equals(spanUUIDString)) {
+                    hasAnalyses = e.getKey().hasAnalyses();
+                }
+            }
+
+            //String[] hearderArr = {"DB identifier", "Symbol", "Chr",
+            //    "Start", "End", "User input"};
+            //List<String> headerList = new ArrayList<String>(Arrays.asList(hearderArr));
+
+            List<String> headerList;
+            if (hasAnalyses) {
+                String[] hearderArr = {"DB identifier", "Symbol", "Chr", "Start", "End", "Analysis", "User input"};
+                headerList = new ArrayList<String>(Arrays.asList(hearderArr));
+            } else {
+                String[] hearderArr = {"DB identifier", "Symbol", "Chr", "Start", "End", "User input"};
+                headerList = new ArrayList<String>(Arrays.asList(hearderArr));
+            }
 
             int extendedSize = featureMap.keySet().iterator().next().getExtendedRegionSize();
 //            String organism = featureMap.keySet().iterator().next().getOrganism();
@@ -318,12 +355,25 @@ public class GenomicRegionSearchAjaxAction extends Action
                         String pid = l.get(1);
                         String symbol = l.get(2);
                         String chr = l.get(4);
-                        String start = l.get(5);
-                        String end = l.get(6);
+                        //String start = l.get(5);
+                        //String end = l.get(6);
+                        String chrAssembly = l.get(5);
+                        String start = l.get(6);
+                        String end = l.get(7);
                         String userInput = e.getKey().getOriginalRegion();
 
-                        String[] rowArr = {pid, symbol, chr, start, end, userInput};
-                        List<String> row = new ArrayList<String>(Arrays.asList(rowArr));
+                        //String[] rowArr = {pid, symbol, chr, start, end, userInput};
+                        //List<String> row = new ArrayList<String>(Arrays.asList(rowArr));
+
+                        List<String> row;
+                        if (hasAnalyses) {
+                            String analysis = l.get(9);
+                            String[] rowArr = {pid, symbol, chr, start, end, analysis, userInput};
+                            row = new ArrayList<String>(Arrays.asList(rowArr));
+                        } else {
+                            String[] rowArr = {pid, symbol, chr, start, end, userInput};
+                            row = new ArrayList<String>(Arrays.asList(rowArr));
+                        }
 
                         if (extendedSize > 0) {
                             String extendedInput = e.getKey().getExtendedRegion();
@@ -571,10 +621,19 @@ public class GenomicRegionSearchAjaxAction extends Action
                 .groupGenomicRegionByInterval(interval,
                         spanOverlapFullResultMap.get(spanUUIDString).keySet());
 
+        boolean hasAnalyses = false;
+        for (Entry<GenomicRegionSearchConstraint, String> e : spanConstraintMap
+                .entrySet()) {
+            if (e.getValue().equals(spanUUIDString)) {
+                hasAnalyses = e.getKey().hasAnalyses();
+            }
+        }
+        LOG.info("getGroupRegions has analyses:");
+        LOG.info(hasAnalyses);
         String htmlStr = grsService.convertResultMapToHTML(
                 spanOverlapFullResultMap.get(spanUUIDString),
                 spanOverlapFullStatMap.get(spanUUIDString),
-                grList, 0, grList.size() - 1, session);
+                grList, 0, grList.size() - 1, session, hasAnalyses);
 
         PrintWriter out = response.getWriter();
         out.println(htmlStr);

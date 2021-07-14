@@ -112,7 +112,6 @@ public class UniprotConverter extends BioDirectoryConverter
      */
     @Override
     public void process(File dataDir) throws Exception {
-	//System.out.println("\n\n\n\n\n\nPROCESSING FILE!!!!!!! AHHHHHHHHHHHHH\n\n\n\n\n\n\n\n");
         try {
             datasourceRefId = getDataSource("UniProt");
             setOntology("UniProtKeyword");
@@ -662,11 +661,13 @@ public class UniprotConverter extends BioDirectoryConverter
         private Set<UniprotEntry> processEntry(UniprotEntry uniprotEntry)
             throws SAXException, ObjectStoreException {
             entryCount++;
-            if (entryCount % 10000 == 0) {
+            if (entryCount % 100 == 0) {
                 LOG.info("Processed " + entryCount + " entries.");
             }
+
             Set<UniprotEntry> isoforms = new HashSet<UniprotEntry>();
             // have we already seen a protein for this organism with the same sequence?
+            
             if (!uniprotEntry.isIsoform() && !allowduplicates
                     && seenSequence(uniprotEntry.getTaxonId(), uniprotEntry.getMd5checksum())) {
                 // if we have seen this sequence before for this organism just add the
@@ -983,7 +984,7 @@ public class UniprotConverter extends BioDirectoryConverter
                     for (String goTerm : values) {
                         Item goEvidence = null;
                         String evidenceCodeString = entry.getGOEvidence(goTerm);
-                        System.out.println("EVIDENCE CODE STRING: " + evidenceCodeString);
+                        //System.out.println("EVIDENCE CODE STRING: " + evidenceCodeString);
                         String code = getGOEvidenceCode(evidenceCodeString);
                         goEvidence = createItem("GOEvidence");
                         goEvidence.setReference("code", code);

@@ -20,6 +20,7 @@
                           taxonId="${dbsnp-variation.taxonId}"
                           assemblyVersion="${dbsnp-variation.assemblyVersion}"
 			  geneSource="${dbsnp-variation.geneSource}"
+                          analysisAccession="${dbsnp-variation.analysisAccession}"
                           sourceName="${source.name}"
                           sourceType="${source.type}">
       <fileset dir="${src.data.dir}" includes="${src.data.dir.includes}"/>

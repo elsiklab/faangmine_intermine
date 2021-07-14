@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
 import org.intermine.api.InterMineAPI;
@@ -50,11 +51,14 @@ import org.intermine.metadata.StringUtil;
 import org.intermine.model.bio.Chromosome;
 import org.intermine.model.bio.Organism;
 import org.intermine.model.bio.SequenceFeature;
+import org.intermine.model.bio.BioProject;
+import org.intermine.model.bio.Analysis;
 import org.intermine.objectstore.ObjectStore;
 import org.intermine.objectstore.query.ConstraintSet;
 import org.intermine.objectstore.query.ContainsConstraint;
 import org.intermine.objectstore.query.Query;
 import org.intermine.objectstore.query.QueryClass;
+import org.intermine.objectstore.query.QueryCollectionReference;
 import org.intermine.objectstore.query.QueryField;
 import org.intermine.objectstore.query.QueryObjectReference;
 import org.intermine.objectstore.query.Results;
@@ -81,6 +85,8 @@ public class GenomicRegionSearchService
     private WebConfig webConfig = null;
     private Map<String, String> classDescrs = null;
     private static String orgFeatureJSONString = null;
+    private static String orgExperimentsJSONString = null;
+    private static String expFeatureJSONString = null;
     private static final String GENOMIC_REGION_SEARCH_OPTIONS_DEFAULT =
         "genomic_region_search_options_default";
     private static final String GENOMIC_REGION_SEARCH_RESULTS_DEFAULT =
@@ -88,6 +94,7 @@ public class GenomicRegionSearchService
     private static final int READ_AHEAD_CHARS = 10000;
     private GenomicRegionSearchConstraint grsc = null;
     private static Set<String> featureTypesInOrgs = null;
+    private static Map<String, Set<String>> allAnalysisFeaturesMap = null;
     private static Map<String, List<String>> featureTypeToSOTermMap = null;
     private static Map<String, Integer> orgTaxonIdMap = null;
     private List<String> selectionInfo = new ArrayList<String>();
@@ -102,7 +109,6 @@ public class GenomicRegionSearchService
         "Chromosome location information is missing";
 
     private static final Logger LOG = Logger.getLogger(GenomicRegionSearchService.class);
-
 
     /**
      * Constructor
@@ -186,6 +192,8 @@ public class GenomicRegionSearchService
         }
 
         long orgFeatureTypesTime = 0;
+        long expFeatureTypesTime = 0;
+        long orgExperimentsTime = 0;
         long featureTypeSoTermTime = 0;
         long orgToTaxonTime = 0;
         if (orgFeatureJSONString == null) {
@@ -195,6 +203,17 @@ public class GenomicRegionSearchService
             Map<String, Set<String>> orgFeatureTypes = getFeatureTypesForOrgs(orgList,
                     excludedFeatureTypes);
             orgFeatureTypesTime = System.currentTimeMillis() - stepTime;
+
+            stepTime = System.currentTimeMillis();
+            Map<String, Map<String, Map<String, Set<String>>>> expFeatureTypes = getFeatureTypesForExps(orgList);
+            LOG.info("getFeatureTypesForExps:");
+            LOG.info(expFeatureTypes);
+            expFeatureTypesTime = System.currentTimeMillis() - stepTime;
+
+            stepTime = System.currentTimeMillis();
+            Map<String, Set<String>> orgExperiments = getExperimentsForOrgs(orgList);
+            orgExperimentsTime = System.currentTimeMillis() - stepTime;
+
             Map<String, Set<String>> orgAssemblyVersions = getAssemblyVersionsForOrgs(orgList);
             stepTime = System.currentTimeMillis();
             getFeatureTypeToSOTermMap();
@@ -204,12 +223,14 @@ public class GenomicRegionSearchService
             getOrganismToTaxonMap();
             orgToTaxonTime = System.currentTimeMillis() - stepTime;
 
-            orgFeatureJSONString = buildJSONString(orgList, orgFeatureTypes, orgAssemblyVersions);
+            orgFeatureJSONString = buildJSONString(orgList, orgFeatureTypes, expFeatureTypes, orgAssemblyVersions, orgExperiments);
         }
         LOG.info("REGION SEARCH INIT total time: " + (System.currentTimeMillis() - startTime)
                 + "ms - "
                 + "getChromosomeInfomationMap: " + chrInfoMapTime + "ms, "
                 + "getFeatureTypesForOrgs: " + orgFeatureTypesTime + "ms, "
+                + "getFeatureTypesForExps: " + expFeatureTypesTime + "ms, "
+                + "getExperimentsForOrgs: " + orgExperimentsTime + "ms, "
                 + "getFeatureTypeToSOTermMap: " + featureTypeSoTermTime + "ms, "
                 + "getOrganismToTaxonMap: " + orgToTaxonTime + "ms.");
         return orgFeatureJSONString;
@@ -311,6 +332,145 @@ public class GenomicRegionSearchService
         return orgFeatureMap;
     }
 
+    // Build map of orgs -> experiments -> feature types
+    // Not every organism will have experiments so we do this separately from getFeatureTypesFromOrgs() function
+    // This also updates global map of orgs -> analysis feature types
+    private Map<String, Map<String, Map<String, Set<String>>>> getFeatureTypesForExps(List<String> orgList) {
+
+        Query q = new Query();
+        q.setDistinct(true);
+
+        QueryClass qcOrg = new QueryClass(Organism.class);
+        QueryClass qcAnalysis = new QueryClass(Analysis.class);
+        QueryClass qcProj = new QueryClass(BioProject.class);
+        QueryClass qcFeature = new QueryClass(SequenceFeature.class);
+
+        QueryField qfOrgName = new QueryField(qcOrg, "shortName");
+        QueryField qfAnalysisAcc = new QueryField(qcAnalysis, "analysisAccession");
+        QueryField qfAnalysisTitle = new QueryField(qcAnalysis, "title");
+        QueryField qfProjCat = new QueryField(qcProj, "category");
+        QueryField qfFeatureClass = new QueryField(qcFeature, "class");
+
+        q.addToSelect(qfOrgName);
+        q.addToSelect(qfAnalysisAcc);
+        q.addToSelect(qfAnalysisTitle);
+        q.addToSelect(qfProjCat);
+        q.addToSelect(qfFeatureClass);
+
+        q.addFrom(qcOrg);
+        q.addFrom(qcAnalysis);
+        q.addFrom(qcProj);
+        q.addFrom(qcFeature);
+
+        q.addToOrderBy(qfOrgName, "ascending");
+        q.addToOrderBy(qfProjCat, "ascending");
+
+        ConstraintSet constraints = new ConstraintSet(ConstraintOp.AND);
+
+        q.setConstraint(constraints);
+
+        // SequenceFeature.organism = Organism
+        QueryObjectReference organism = new QueryObjectReference(qcFeature, "organism");
+        ContainsConstraint ccOrg = new ContainsConstraint(organism, ConstraintOp.CONTAINS, qcOrg);
+        constraints.addConstraint(ccOrg);
+
+        // Analysis.bioProject = BioProject
+        QueryObjectReference bioProject = new QueryObjectReference(qcAnalysis, "bioProject");
+        ContainsConstraint ccProj = new ContainsConstraint(bioProject, ConstraintOp.CONTAINS, qcProj);
+        constraints.addConstraint(ccProj);
+
+        // Features.analysis contains Analysis
+        QueryCollectionReference analyses = new QueryCollectionReference(qcFeature, "analyses");
+        ContainsConstraint ccSub = new ContainsConstraint(analyses, ConstraintOp.CONTAINS, qcAnalysis);
+        constraints.addConstraint(ccSub);
+
+        Results results = objectStore.execute(q, initBatchSize, true, true, true);
+
+        // Parse results data to a map
+        // Structure: map (organism -> map ( project category -> map ( analysis title -> {set of features})))
+        // Index on organism name, project category, and analysis title
+        // Note that if multiple projects have the same category, their analyses are grouped together in this map,
+        // as ultimately the user is querying on analysis title + project category (not individual project id). 
+        Map<String, Map<String, Map<String, Set<String>>>> orgProjectCatMap = new LinkedHashMap<String, Map<String, Map<String, Set<String>>>>();
+        Set<String> featureTypeSet = new LinkedHashSet<String>();
+        allAnalysisFeaturesMap = new LinkedHashMap<String, Set<String>>();
+
+        // TODO this will be very slow when query too many features
+        if (results != null && results.size() > 0) {
+            for (Iterator<?> iter = results.iterator(); iter.hasNext(); ) {
+                ResultsRow<?> row = (ResultsRow<?>) iter.next();
+
+                // 0) Organism
+                // 1) Analysis accession (currently not used, but may need to be added later)
+                // 2) Analysis title
+                // 3) Project category
+                // 4) Feature class
+                String org = (String) row.get(0);
+                String title = (String) row.get(2);
+                String cat = (String) row.get(3);
+                String featureType = ((Class) row.get(4)).getSimpleName();
+                if (!"Chromosome".equals(featureType) && orgList.contains(org)) {
+                    // Update allAnalysisFeaturesMap first
+                    if (allAnalysisFeaturesMap.containsKey(org)) {
+                        allAnalysisFeaturesMap.get(org).add(featureType);
+                    }
+                    else {
+                        Set<String> s = new LinkedHashSet<String>();
+                        s.add(featureType);
+                        allAnalysisFeaturesMap.put(org, s);
+                    }
+
+                    // Now build orgProjectCat map
+                    if (orgProjectCatMap.containsKey(org)) {
+                        // Have seen this organism before
+                        // By construction, we know that the cat -> analysis -> features map exists
+                        // as it was initialized the first time we saw this organism
+                        // So, only need to check whether we've seen this project category before
+                        if (orgProjectCatMap.get(org).keySet().contains(cat)) {
+                            // We've seen this category before
+                            // Have we seen this analysis title before?
+                            if (orgProjectCatMap.get(org).get(cat).keySet().contains(title)) {
+                                // We've seen this analysis title before
+                                // Feature set already exists, so just add this feature to it
+                                orgProjectCatMap.get(org).get(cat).get(title).add(featureType);
+                            }
+                            else {
+                                // Have not seen this analysis title before
+                                // Need to create a new feature set, add this feature to it,
+                                // and add analysis to map
+                                Set<String> s = new LinkedHashSet<String>();
+                                s.add(featureType);
+                                orgProjectCatMap.get(org).get(cat).put(title, s);
+                            }
+                        }
+                        else {
+                            // Haven't seen this category before
+                            // Need to create a new map for analysis -> feature set and add to map
+                            Map<String, Set<String>> analysisFeaturesMap = new LinkedHashMap<String, Set<String>>();
+                            Set<String> s = new LinkedHashSet<String>();
+                            s.add(featureType);
+                            analysisFeaturesMap.put(title, s);
+                            orgProjectCatMap.get(org).put(cat, analysisFeaturesMap);
+                        }
+                    } else {
+                        // Haven't seen this organism yet
+                        // Need to create map of cat -> map of title -> feature set and add this
+                        // category, analysis title, and feature to it
+                        Map<String, Map<String, Set<String>>> catAnalysesMap = new LinkedHashMap<String, Map<String, Set<String>>>();
+                        Map<String, Set<String>> analysisFeaturesMap = new LinkedHashMap<String, Set<String>>();
+                        Set<String> s = new LinkedHashSet<String>();
+                        s.add(featureType);
+                        analysisFeaturesMap.put(title, s);
+                        catAnalysesMap.put(cat, analysisFeaturesMap);
+                        orgProjectCatMap.put(org, catAnalysesMap);
+                    }
+                }
+            }
+        }
+
+        return orgProjectCatMap;
+    }
+
     private Map<String, Set<String>> getAssemblyVersionsForOrgs(List<String> orgList) {
         Map<String, Set<String>> orgAssemblyMap = new LinkedHashMap<String, Set<String>>();
 
@@ -329,11 +489,16 @@ public class GenomicRegionSearchService
         q.addFrom(qcOrg);
         q.addFrom(qcChr);
 
-
         q.addToOrderBy(qfOrgName, "ascending");
 
         ConstraintSet constraints = new ConstraintSet(ConstraintOp.AND);
         q.setConstraint(constraints);
+
+	// Chromosome.organism = Organism
+	QueryObjectReference organism = new QueryObjectReference(qcChr, "organism");
+	ContainsConstraint ccOrg = new ContainsConstraint(organism, ConstraintOp.CONTAINS, qcOrg);
+	constraints.addConstraint(ccOrg);
+
         Results results = objectStore.execute(q, initBatchSize, true, true, true);
 
         if (results != null && results.size() > 0) {
@@ -352,6 +517,54 @@ public class GenomicRegionSearchService
             }
         }
         return orgAssemblyMap;
+    }
+
+    private Map<String, Set<String>> getExperimentsForOrgs(List<String> orgList) {
+        Map<String, Set<String>> orgExperimentsMap = new LinkedHashMap<String, Set<String>>();
+
+        Query q = new Query();
+        q.setDistinct(true);
+
+        QueryClass qcPr = new QueryClass(BioProject.class);
+        QueryClass qcOrg = new QueryClass(Organism.class);
+
+        QueryField qfOrgName = new QueryField(qcOrg, "shortName");
+        QueryField qcPrCategory = new QueryField(qcPr, "category");
+
+        q.addToSelect(qfOrgName);
+        q.addToSelect(qcPrCategory);
+
+        q.addFrom(qcOrg);
+        q.addFrom(qcPr);
+
+        q.addToOrderBy(qfOrgName, "ascending");
+
+        ConstraintSet constraints = new ConstraintSet(ConstraintOp.AND);
+        q.setConstraint(constraints);
+
+        // BioProject.organism = Organism
+        QueryObjectReference organism = new QueryObjectReference(qcPr, "organism");
+        ContainsConstraint ccOrg = new ContainsConstraint(organism, ConstraintOp.CONTAINS, qcOrg);
+        constraints.addConstraint(ccOrg);
+
+        Results results = objectStore.execute(q, initBatchSize, true, true, true);
+
+        if (results != null && results.size() > 0) {
+            for (Iterator<?> iter = results.iterator(); iter.hasNext(); ) {
+                ResultsRow<?> row = (ResultsRow<?>) iter.next();
+                String org = (String) row.get(0);
+                String category = (String) row.get(1);
+                if (orgExperimentsMap.containsKey(org)) {
+                    orgExperimentsMap.get(org).add(category);
+                }
+                else {
+                    Set<String> set = new HashSet<String>();
+                    set.add(category);
+                    orgExperimentsMap.put(org, set);
+                }
+            }
+        }
+        return orgExperimentsMap;
     }
 
     // build JSON string to display region search options
@@ -432,9 +645,15 @@ public class GenomicRegionSearchService
      * @param orgAssemblyMap
      * @return
      */
-    private String buildJSONString(List<String> orgList, Map<String, Set<String>> resultsMap, Map<String, Set<String>> orgAssemblyMap) {
+    private String buildJSONString(List<String> orgList, Map<String, Set<String>> resultsMap,
+            Map<String, Map<String, Map<String, Set<String>>>> expFeatureTypesMap,
+            Map<String, Set<String>> orgAssemblyMap, 
+            Map<String, Set<String>> orgExperimentsMap) {
         List<Object> ft = new ArrayList<Object>();
         List<Object> oa = new ArrayList<Object>();
+        List<Object> af = new ArrayList<Object>();
+        List<Object> oe = new ArrayList<Object>();
+        List<Object> ef = new ArrayList<Object>();
         List<Object> gb = new ArrayList<Object>();
         Map<String, Object> ma = new LinkedHashMap<String, Object>();
 
@@ -478,6 +697,72 @@ public class GenomicRegionSearchService
             gb.add(mgb);
         }
 
+        // Create array:
+        // array[ organism: (name),
+        //   projects: array[
+        //     category: (name),
+        //     project: array[
+        //       title: (analysis title),
+        //       features: (array of feature type strings)
+        //     ]
+        //   ]
+        // ]
+        // Begin by iterating over organism names:
+        for (String org : expFeatureTypesMap.keySet()) {
+            // Outermost map
+            Map<String, Object> expCategoriesEntry = new LinkedHashMap<String, Object>();
+            // Store organism name with key "organism"
+            expCategoriesEntry.put("organism", org);
+
+            // Wish to store array of project categories with key "projects"; create array:
+            Map<String, Map<String, Set<String>>> orgProjectCats = expFeatureTypesMap.get(org);
+            ArrayList<Object> projectCatList = new ArrayList<Object>();
+
+            // Iterate over project categories:
+            for (String cat : orgProjectCats.keySet()) {
+                // Next map
+                Map<String, Object> analysesEntry = new LinkedHashMap<String, Object>();
+                // Store category name with key "category"
+                analysesEntry.put("category", cat);
+                
+                // Wish to store array of analyses with key "analyses"; create array:
+                Map<String, Set<String>> catAnalyses = expFeatureTypesMap.get(org).get(cat);
+                ArrayList<Object> analysisList = new ArrayList<Object>();   
+
+                // Iterate over analyses (titles and feature sets)
+                for (Entry<String, Set<String>> e : catAnalyses.entrySet()) {
+                    Map<String, Object> analysisFeatures = new LinkedHashMap<String, Object>();
+                    analysisFeatures.put("title", e.getKey());
+
+                    ArrayList<String> features = new ArrayList<String>();
+                    for (String v : e.getValue()) {
+                        features.add(v);
+                    }
+
+                    analysisFeatures.put("features", features);
+                    analysisList.add(analysisFeatures);
+                }
+                // Now store array with key "analyses":
+                analysesEntry.put("analyses", analysisList);
+                projectCatList.add(analysesEntry);
+            }
+            // Finally, store array with key "projects":
+            expCategoriesEntry.put("projects", projectCatList);
+
+            ef.add(expCategoriesEntry);
+        }
+
+        for (Entry<String, Set<String>> e : allAnalysisFeaturesMap.entrySet()) {
+            Map<String, Object> analysisFeatureEntry = new LinkedHashMap<String, Object>();
+            analysisFeatureEntry.put("organism", e.getKey());
+            ArrayList<String> featureList = new ArrayList<String>();
+            for (String v : e.getValue()) {
+                featureList.add(v);
+            }
+            analysisFeatureEntry.put("features", featureList);
+            af.add(analysisFeatureEntry);
+        }
+
         for (Entry<String, Set<String>> e : orgAssemblyMap.entrySet()) {
             Map<String, Object> organismAssemblyEntry = new LinkedHashMap<String, Object>();
             organismAssemblyEntry.put("organism", e.getKey());
@@ -489,10 +774,24 @@ public class GenomicRegionSearchService
             oa.add(organismAssemblyEntry);
         }
 
+        for (Entry<String, Set<String>> e : orgExperimentsMap.entrySet()) {
+            Map<String, Object> orgExperimentEntry = new LinkedHashMap<String, Object>();
+            orgExperimentEntry.put("organism", e.getKey());
+            ArrayList<String> experiment = new ArrayList<String>();
+            for (String v : e.getValue()) {
+                experiment.add(v);
+            }
+            orgExperimentEntry.put("experiment", experiment);
+            oe.add(orgExperimentEntry);
+        }
+
         ma.put("organisms", orgList);
         ma.put("assemblies", oa);
         ma.put("genomeBuilds", gb);
         ma.put("featureTypes", ft);
+        ma.put("experiments", oe);
+        ma.put("analyses", ef);
+        ma.put("analysis_features", af);
         JSONObject jo = new JSONObject(ma);
 
         String preDataStr = jo.toString();
@@ -609,6 +908,8 @@ public class GenomicRegionSearchService
         // Parse form
         String organism = (String) grsForm.get("organism");
         String chrAssembly = (String) grsForm.get("assembly");
+        String[] categories = (String[]) grsForm.get("categories");
+        String[] analyses = (String[]) grsForm.get("analyses");
         String[] featureTypes = (String[]) grsForm.get("featureTypes");
         String whichInput = (String) grsForm.get("whichInput");
         String dataFormat = (String) grsForm.get("dataFormat");
@@ -635,6 +936,25 @@ public class GenomicRegionSearchService
         }
 
         selectionInfo.add("<b>Selected organism: </b><i>" + organism + "</i>");
+        selectionInfo.add("<b>Selected assembly: </b><i>" + chrAssembly + "</i>");
+
+        String categoriesStr = "N/A";
+        List<String> categoriesList = new ArrayList<String>(Arrays.asList(categories));
+        if (categories.length > 0) {
+            categoriesStr = StringUtil.join(categoriesList, ", ");
+        }
+        LOG.info("Selected categories: " + categoriesStr);
+        grsc.setCategories(categoriesList);
+        selectionInfo.add("<b>Selected categories: </b><i>" + categoriesStr + "</i>");
+
+        String analysesStr = "N/A";
+        List<String> analysesList = new ArrayList<String>(Arrays.asList(analyses));
+        if (analyses.length > 0) {
+            analysesStr = StringUtil.join(analysesList, ", ");
+            selectionInfo.add("<b>Selected analyses: </b><i>" + analysesStr + "</i>");
+        }
+        LOG.info("Selected analyses: " + analysesStr);
+        grsc.setAnalyses(analysesList);
 
         // Feature types
         if (featureTypes == null) {
@@ -867,6 +1187,8 @@ public class GenomicRegionSearchService
             grsc.getGenomicRegionList(),
             grsc.getExtendedRegionSize(),
             grsc.getOrgName(),
+            grsc.getCategories(),
+            grsc.getAnalyses(),
             grsc.getFeatureTypes(),
             grsc.getStrandSpecific());
     }
@@ -1231,13 +1553,14 @@ public class GenomicRegionSearchService
      * @param fromIdx offsetStart
      * @param toIdx offsetEnd
      * @param session the current session
+     * @param hasAnalyses whether this search contains analysis data
      * @return a String of HTML
      */
     public String convertResultMapToHTML(
             Map<GenomicRegion, List<List<String>>> resultMap,
             Map<GenomicRegion, Map<String, Integer>> resultStat,
             List<GenomicRegion> genomicRegionList, int fromIdx, int toIdx,
-            HttpSession session) {
+            HttpSession session, boolean hasAnalyses) {
 
         // TODO hard coded count limit
         int maxRecordCutOff = 1000;
@@ -1257,11 +1580,15 @@ public class GenomicRegionSearchService
         // start to build the html for results table
         StringBuffer sb = new StringBuffer();
 
+        LOG.info("generating HTML; hasAnalyses:");
+        LOG.info(hasAnalyses);
+
         //TODO use HTML Template
         sb.append("<thead><tr valign=\"middle\">");
         sb.append("<th align=\"center\">Genome Region</th>");
         sb.append("<th align=\"center\">Feature</th>");
         sb.append("<th align=\"center\">Feature Type</th>");
+        if (hasAnalyses) { sb.append("<th align=\"center\">Analysis</th>"); }
         sb.append("<th align=\"center\">Location</th>");
         sb.append("</tr></thead>");
         sb.append("<tbody>");
@@ -1300,8 +1627,12 @@ public class GenomicRegionSearchService
              *        2.symbol
              *        3.feature type
              *        4.chr
-             *        5.start
-             *        6.end
+             *        5.assembly
+             *        6.start
+             *        7.end
+             *        8.strand
+             *        9.analysis title (only if analyses queried)
+             *        10.project category (only if analyses queried)
              * see query fields in createQueryList method
              */
             if (features != null) {
@@ -1309,15 +1640,15 @@ public class GenomicRegionSearchService
                     int length = features.size();
                     addFirstFeatures(baseURL, path, galaxyDisplay,
                             exportChromosomeSegment, sb, s, features, ftHtml,
-                            ftSet, span, length);
+                            ftSet, span, length, hasAnalyses);
 
                     for (int i = 1; i < length; i++) {
-                        addFeaturesAboveCutoff(baseURL, path, sb, features, i);
+                        addFeaturesAboveCutoff(baseURL, path, sb, features, i, hasAnalyses);
                     }
                 } else { // some feature sizes are over cutoff
                     int length = addFeaturesAboveCutoff(galaxyDisplay,
                             exportChromosomeSegment, sb, s, features, ftHtml,
-                            ftSet, aboveCutOffFeatureTypeMap, span);
+                            ftSet, aboveCutOffFeatureTypeMap, span, hasAnalyses);
 
                     parseFeaturesAboveCutoff(sb, s, aboveCutOffFeatureTypeMap);
 
@@ -1325,9 +1656,11 @@ public class GenomicRegionSearchService
                             aboveCutOffFeatureTypeMap, length);
                 }
             } else {
+                int colSpan = 3;
+                if (hasAnalyses) { colSpan = 4; }
                 sb.append("<tr><td><b>"
                         + span
-                        + "</b></td><td colspan='3'><i>No overlap features found</i></td></tr>");
+                        + "</b></td><td colspan='" + colSpan + "'><i>No overlap features found</i></td></tr>");
             }
         }
 
@@ -1339,8 +1672,16 @@ public class GenomicRegionSearchService
     private void addFirstFeatures(String baseURL, String path,
             String galaxyDisplay, String exportChromosomeSegment,
             StringBuffer sb, GenomicRegion s, List<List<String>> features,
-            String ftHtml, Set<String> ftSet, String span, int length) {
+            String ftHtml, Set<String> ftSet, String span, int length,
+            boolean hasAnalyses) {
         List<String> firstFeature = features.get(0);
+
+        LOG.info("========================");
+        LOG.info("addFirstFeatures called:");
+        LOG.info(features);
+        LOG.info(firstFeature.size());
+        LOG.info("========================");
+
         String firstId = firstFeature.get(0);
         String firstPid = firstFeature.get(1);
         String firstSymbol = firstFeature.get(2);
@@ -1349,6 +1690,7 @@ public class GenomicRegionSearchService
         String firstChrAssembly = firstFeature.get(5);
         String firstStart = firstFeature.get(6);
         String firstEnd = firstFeature.get(7);
+        // strand is position 8
 
         String loc = firstChr + ":" + firstStart + ".." + firstEnd;
 
@@ -1442,6 +1784,7 @@ public class GenomicRegionSearchService
 
         sb.append("</td>");
 
+        // Add feature column
         sb.append("<td><a target='' title='' href='" + baseURL + "/" + path
                 + "/report.do?id=" + firstId + "'>");
 
@@ -1462,20 +1805,32 @@ public class GenomicRegionSearchService
                             + firstPid + "</span>");
         }
 
+        // Add feature type column
         sb.append("</a></td><td>" + firstSoTerm
                 + "<a onclick=\"document.getElementById('ctxHelpTxt').innerHTML='"
                 + firstSoTerm + ": " + firstSoTermDes.replaceAll("&apos;", "\\\\'")
                 + "';document.getElementById('ctxHelpDiv').style.display='';"
                 + "window.scrollTo(0, 0);return false\" title=\"" + firstSoTermDes
                 + "\"><img class=\"tinyQuestionMark\" "
-                + "src=\"images/icons/information-small-blue.png\" alt=\"?\"></a>"
-                + "</td><td>" + loc + "</td></tr>");
+                + "src=\"images/icons/information-small-blue.png\" alt=\"?\"></a></td>");
+
+        // Add analysis column, if applicable
+        if (hasAnalyses) {
+            String analysisTitle = firstFeature.get(9);
+            String projCat = firstFeature.get(10);
+            sb.append("<td>" + analysisTitle + "</td>");
+            //sb.append("<td>" + analysisTitle + "<br>" + projCat + "</td>");
+        }
+
+        // Add location column
+        sb.append("<td>" + loc + "</td></tr>");
     }
 
     private int addFeaturesAboveCutoff(String galaxyDisplay,
             String exportChromosomeSegment, StringBuffer sb, GenomicRegion s,
             List<List<String>> features, String ftHtml, Set<String> ftSet,
-            Map<String, Integer> aboveCutOffFeatureTypeMap, String span) {
+            Map<String, Integer> aboveCutOffFeatureTypeMap, String span,
+            boolean hasAnalyses) {
         int length = features.size();
 
         String firstFeatureType = aboveCutOffFeatureTypeMap.keySet().iterator().next();
@@ -1581,7 +1936,9 @@ public class GenomicRegionSearchService
 
         int firstRecordCount = aboveCutOffFeatureTypeMap.get(firstFeatureType);
 
-        sb.append("<td colspan='3'><b>" + firstRecordCount + "</b> "
+        int colSpan = 3;
+        if (hasAnalyses) { colSpan = 4; }
+        sb.append("<td colspan='" + colSpan + "'><b>" + firstRecordCount + "</b> "
                 + firstSoTerm
                 + "<a onclick=\"document.getElementById('ctxHelpTxt').innerHTML='"
                 + firstSoTerm + ": " + firstSoTermDes.replaceAll("&apos;", "\\\\'")
@@ -1606,7 +1963,8 @@ public class GenomicRegionSearchService
     }
 
     private void addFeaturesAboveCutoff(String baseURL, String path,
-            StringBuffer sb, List<List<String>> features, int i) {
+            StringBuffer sb, List<List<String>> features, int i,
+            boolean hasAnalyses) {
         String id = features.get(i).get(0);
         String pid = features.get(i).get(1);
         String symbol = features.get(i).get(2);
@@ -1615,6 +1973,7 @@ public class GenomicRegionSearchService
         String chrAssembly = features.get(i).get(5);
         String start = features.get(i).get(6);
         String end = features.get(i).get(7);
+        // strand is position 8
 
         String soTerm = WebUtil.formatPath(featureType, interMineAPI,
                 webConfig);
@@ -1648,6 +2007,7 @@ public class GenomicRegionSearchService
                             + pid + "</span>");
         }
 
+        // Add feature type column
         sb.append("</a></td><td>"
                 + soTerm
                 + "<a onclick=\"document.getElementById('ctxHelpTxt').innerHTML='"
@@ -1655,8 +2015,18 @@ public class GenomicRegionSearchService
                 + "';document.getElementById('ctxHelpDiv').style.display='';"
                 + "window.scrollTo(0, 0);return false\" title=\"" + soTermDes
                 + "\"><img class=\"tinyQuestionMark\" "
-                + "src=\"images/icons/information-small-blue.png\" alt=\"?\"></a>"
-                + "</td><td>" + location + "</td></tr>");
+                + "src=\"images/icons/information-small-blue.png\" alt=\"?\"></a></td>");
+
+        // Add analysis column, if applicable
+        if (hasAnalyses) {
+            String analysisTitle = features.get(i).get(9);
+            String projCat = features.get(i).get(10);
+            sb.append("<td>" + analysisTitle + "</td>");
+            //sb.append("<td>" + analysisTitle + "<br>" + projCat + "</td>");
+        }
+
+        // Add location column
+        sb.append("<td>" + location + "</td></tr>");
     }
 
     private void parseFeaturesBelowCutoff(String baseURL, String path,
@@ -1669,8 +2039,9 @@ public class GenomicRegionSearchService
             String symbol = features.get(i).get(2);
             String featureType = features.get(i).get(3);
             String chr = features.get(i).get(4);
-            String start = features.get(i).get(5);
-            String end = features.get(i).get(6);
+            String chrAssembly = features.get(i).get(5);
+            String start = features.get(i).get(6);
+            String end = features.get(i).get(7);
 
             String soTerm = WebUtil.formatPath(featureType, interMineAPI,
                     webConfig);
@@ -1754,6 +2125,7 @@ public class GenomicRegionSearchService
             }
         }
     }
+
 
     /**
      * Get all feature types from a list of sequence features

@@ -62,14 +62,25 @@ public class OrthodbConverter extends BioFileConverter
     private static String evidenceRefId = null;
     protected String version = null;
 
-    private Map<GeneHolder, Set<GeneHolder>> geneToHomologues = new HashMap<GeneHolder,
-            Set<GeneHolder>>();
-    private Map<MultiKey, GeneHolder> identifierToGene = new HashMap<MultiKey, GeneHolder>();
-    protected IdResolver rslv;
-    private static final OrganismRepository OR = OrganismRepository.getOrganismRepository();
+    // * geneToHomologues keeps track of all homologues per gene to avoid repeats in the
+    // * Homologue table. But now that we are adding in clusterId and lastCommonAncestor,
+    // * there is no need to group by gene, as the clusterId will result in a unique row
+    // * in the table.
+    //private Map<GeneHolder, Set<GeneHolder>> geneToHomologues = new HashMap<GeneHolder,
+    //        Set<GeneHolder>>();
+    // identifierToGene maps gene IDs (from the data file) to their resolved IDs
+    // * We are not using the ID Resolver, so this map is no longer needed.
+    //private Map<MultiKey, GeneHolder> identifierToGene = new HashMap<MultiKey, GeneHolder>();
+    // * Again, no ID Resolver, so not needed:
+    //protected IdResolver rslv;
+    // * We are not doing lookups by organism string, so this is not needed:
+    //private static final OrganismRepository OR = OrganismRepository.getOrganismRepository();
     private String clusterId = null;
     private String lastCommonAncestor = null;
     private String geneSource = null;
+
+    // Keep track of gene refs
+    private HashMap<String,String> geneIdToRef = new HashMap<String, String>();
 
     /**
      * Constructor
@@ -88,7 +99,7 @@ public class OrthodbConverter extends BioFileConverter
      */
     public void setOrthodbOrganisms(String taxonIds) {
         this.taxonIds = new HashSet<String>(Arrays.asList(StringUtil.split(taxonIds, " ")));
-        LOG.info("Setting list of organisms to " + taxonIds);
+        System.out.println("Setting list of organisms to " + taxonIds);
     }
 
     public void setGeneSource(String geneSource) {
@@ -108,7 +119,7 @@ public class OrthodbConverter extends BioFileConverter
     public void setOrthodbHomologues(String homologues) {
         this.homologueTaxonIds = new HashSet<String>(Arrays.asList(
                 StringUtil.split(homologues, " ")));
-        LOG.info("Setting list of homologues to " + homologues);
+        System.out.println("Setting list of homologues to " + homologues);
     }
 
     /**
@@ -139,7 +150,10 @@ public class OrthodbConverter extends BioFileConverter
             7) UniProt_Description
             8) InterPro_domains
         */
-        createIDResolver();
+
+        // * No longer using ID Resolver
+        //createIDResolver();
+
         String previousGroup = null;
         Set<GeneHolder> homologues = new HashSet<GeneHolder>();
 
@@ -166,13 +180,21 @@ public class OrthodbConverter extends BioFileConverter
             String clusterId = bits[1];
 	    String lastCommonAncestor = bits[6];
 
+            //System.out.println("clusterId: " + clusterId + " | lastCommonAncestor: " + lastCommonAncestor);
+
             // at a different groupId, process previous homologue group
             if (previousGroup != null && !clusterId.equals(previousGroup)) {
+                //System.out.println("Different groupId from previous, processing homologues");
                 processHomologueGroup(homologues);
                 homologues = new HashSet<GeneHolder>();
             }
+            //else { System.out.println("First group or same as before"); }
 
-            String taxonId = getTaxon(bits[4]); // bits[4] is the long string of taxon Ids
+            // * Changing this to get taxonId from 5th column rather than looking it up from its string in the
+            // * previous column - e.g., B. bubalis is not in the lookup file.
+            // * At one time maybe there were multiple species per line but that seems to no longer be the case.
+            //String taxonId = getTaxon(bits[4]); // bits[4] is the long string of taxon Ids
+            String taxonId = bits[5]; // bits[5] is the taxon ID
 
             if (taxonId != null && isValid(taxonId)) {
                 String proteinId = bits[2];
@@ -182,26 +204,47 @@ public class OrthodbConverter extends BioFileConverter
                 if (config.get(taxonId) != null) {
                     identifier = geneId;
                 }
-                String resolvedIdentifier = resolveGene(identifier, taxonId);
-                if (resolvedIdentifier == null) {
-                    // bad gene, keep going
-                    continue;
-                }
-                MultiKey key = new MultiKey(resolvedIdentifier, taxonId);
-                GeneHolder gene = identifierToGene.get(key);
-                if (gene == null) {
-                    gene = new GeneHolder(resolvedIdentifier, taxonId, clusterId,lastCommonAncestor);
-                    identifierToGene.put(key, gene);
-                }
+
+                // * No longer using ID resolver
+                //String resolvedIdentifier = resolveGene(identifier, taxonId);
+                //if (resolvedIdentifier == null) {
+                //    // bad gene, keep going
+                //    System.out.println("BAD GENE, ignoring: " + identifier);
+                //    continue;
+                //}
+                // * Keeping old variable name to avoid changing elsewhere in code,
+                // * but without the resolver, resolved ID will always be the ID itself.
+                String resolvedIdentifier = identifier;
+
+                // * No longer needed because we aren't keeping a giant list of genes -> homologues anymore:
+                //MultiKey key = new MultiKey(resolvedIdentifier, taxonId);
+                //GeneHolder gene = identifierToGene.get(key);
+                //if (gene == null) {
+                //    gene = new GeneHolder(resolvedIdentifier, taxonId, clusterId,lastCommonAncestor);
+                //    identifierToGene.put(key, gene);
+                //}
+
+                // * Create a new GeneHolder for this row
+                // * Note that it's called "GeneHolder" but really think of it as holding homologue row info 
+                // * now that cluster ID and LCA are also stored.
+                GeneHolder gene = new GeneHolder(resolvedIdentifier, taxonId, clusterId,lastCommonAncestor);
                 homologues.add(gene);
             }
+            else {
+                System.out.println("taxonId is null or invalid for line with cluster ID: " + clusterId);
+            }
             previousGroup = clusterId;
+
+            //System.out.println("homologues: ");
+            //System.out.println(homologues); 
         }
         // parse the last group of the file
         processHomologueGroup(homologues);
 
+        // * Instead of processing all homologues at the end, create them as we go in processHomologueGroup() 
+        // * after we've seen all homologues in a cluster.
         // store genes, set relationships
-        processHomologues();
+        //processHomologues();
     }
 
     private void readConfig() {
@@ -227,54 +270,88 @@ public class OrthodbConverter extends BioFileConverter
         }
     }
 
-    private void processHomologuePair(GeneHolder gene, GeneHolder homologue)
+    // This function verifies that the genes are valid homologues and does additional 
+    // processing before creating the homologue object in the database.
+    private void processHomologuePair(GeneHolder gene1, GeneHolder gene2)
         throws ObjectStoreException {
 
-        String geneTaxonId = gene.getTaxonId();
-        String homologueTaxonId = homologue.getTaxonId();
+        String gene1TaxonId = gene1.getTaxonId();
+        String gene2TaxonId = gene2.getTaxonId();
 
         // at least one of these pair have to be from an organism of interest
-        if (!isValidPair(geneTaxonId, homologueTaxonId)) {
+        if (!isValidPair(gene1TaxonId, gene2TaxonId)) {
+            System.out.println("Homologue pair is invalid for clusterId: " + gene1.getClusterId());
             return;
         }
 
-        final String refId1 = getGene(gene);
-        final String refId2 = getGene(homologue);
+        final String refId1 = getGene(gene1);
+        final String refId2 = getGene(gene2);
 
+        //System.out.println("processHomologuePair(): refId1: " + refId1 + " | refId2: " + refId2);
+
+        // The IDs shouldn't be null, nor should they be equal to each other
+        // I believe this can no longer happen due to the format of the data set but leaving in as
+        // a precaution anyway:
         if (refId1 == null || refId2 == null || refId1.equals(refId2)) {
-            // will happen if ID resolver fails to find a match
+            System.out.println("******BAD: Skipping due to null value(s) or refId1 = refId2");
+            System.out.println("gene1 id: " + gene1.getIdentifier() + ", gene2 id: " + gene2.getIdentifier() 
+                  + ", gene1 cluster id: " + gene1.getClusterId() + ", gene2 cluster id: " + gene2.getClusterId());
             return;
         }
-        final String type = (geneTaxonId.equals(homologueTaxonId) ? PARALOGUE : ORTHOLOGUE);
-        createHomologue(refId1, refId2, type, gene.getClusterId(), gene.getlastCommonAncestor());
+        final String type = (gene1TaxonId.equals(gene2TaxonId) ? PARALOGUE : ORTHOLOGUE);
+        createHomologue(refId1, refId2, type, gene1.getClusterId(), gene1.getlastCommonAncestor());
     }
 
 
-    private void processHomologues() throws ObjectStoreException {
-        for (Entry<GeneHolder, Set<GeneHolder>> entry : geneToHomologues.entrySet()) {
-            GeneHolder gene = entry.getKey();
-            Set<GeneHolder> homologues = entry.getValue();
-            for (GeneHolder homologue : homologues) {
-                processHomologuePair(gene, homologue);
-            }
-        }
-    }
+    // * NEW: this is no longer needed because we will create Homologue objects directly after
+    // * processing a cluster instead of waiting to the end of the file.
+    //
+    //private void processHomologues() throws ObjectStoreException {
+    //    for (Entry<GeneHolder, Set<GeneHolder>> entry : geneToHomologues.entrySet()) {
+    //        GeneHolder gene = entry.getKey();
+    //        Set<GeneHolder> homologues = entry.getValue();
+    //        for (GeneHolder homologue : homologues) {
+    //            processHomologuePair(gene, homologue);
+    //        }
+    //    }
+    //}
 
+    // * NEW: No longer using maps to prevent duplicates now that cluster ID and LCA info added
+    // * to a Homologue row in the table.
+    // * Instead, generate all of the n*(n-1) pairs (with symmetry) of the cluster of size n and
+    // * add to the Homologue table as we go.
+    //
     // create maps from all homologues to all other homologues. need to keep in maps to prevent
     // dupes
-    private void processHomologueGroup(Set<GeneHolder> homologueList) {
-        for (GeneHolder geneHolder : homologueList) {
-            Set<GeneHolder> homologues = new HashSet(homologueList);
-            Set<GeneHolder> previousHomologues = geneToHomologues.get(geneHolder);
-            if (previousHomologues != null && previousHomologues.size() > 0) {
-                homologues.addAll(previousHomologues);
+    private void processHomologueGroup(Set<GeneHolder> homologueList)
+        throws ObjectStoreException {
+        //System.out.println("Called processHomologueGroup():");
+
+        //for (GeneHolder geneHolder : homologueList) {
+        //    Set<GeneHolder> homologues = new HashSet(homologueList);
+        //    Set<GeneHolder> previousHomologues = geneToHomologues.get(geneHolder);
+        //    if (previousHomologues != null && previousHomologues.size() > 0) {
+        //        homologues.addAll(previousHomologues);
+        //    }
+        //    geneToHomologues.put(geneHolder, homologues);
+        //}
+        //
+        
+        // Iterate through homologue list twice to generate all n*(n-1) pairs and
+        // add homologues to database.
+        for (GeneHolder gene1 : homologueList) {
+            for (GeneHolder gene2 : homologueList) {
+                // Exclude identity pairs (don't put a row in the table that a gene is a homologue of itself)
+                if (!gene1.equals(gene2)) {
+                    processHomologuePair(gene1, gene2);
+                }
             }
-            geneToHomologues.put(geneHolder, homologues);
         }
     }
 
     private void createHomologue(String gene1, String gene2, String type, String clusterId, String lastCommonAncestor)
         throws ObjectStoreException {
+        //System.out.println("Creating homologue object with params: " + gene1 + ", " + gene2 + ", " + type + ", " + clusterId + ", " + lastCommonAncestor);
         Item homologue = createItem("Homologue");
         homologue.setReference("gene", gene1);
         homologue.setReference("homologue", gene2);
@@ -295,6 +372,7 @@ public class OrthodbConverter extends BioFileConverter
         if (homologueTaxonIds.isEmpty()) {
             // no config for homologues. since this taxon has failed the previous test, it's
             // not an organism of interest
+            System.out.println("no config for homologues, taxon id not valid: " + taxonId);
             return false;
         }
         if (homologueTaxonIds.contains(taxonId)) {
@@ -302,6 +380,7 @@ public class OrthodbConverter extends BioFileConverter
             return true;
         }
         // not found in config
+        System.out.println("taxonId not found in config, not valid: " + taxonId);
         return false;
     }
 
@@ -329,16 +408,23 @@ public class OrthodbConverter extends BioFileConverter
         return false;
     }
 
+    // This function creates the Gene objects referred to in the Homologue table.
+    // The refIds keep track of whether a Gene object has been created for a gene identifier
+    // so that we don't create duplicates.
     private String getGene(GeneHolder holder) throws ObjectStoreException {
-        String refId = holder.getRefId();
+        String geneId = holder.getIdentifier();
+        String refId = geneIdToRef.get(geneId);
+        //System.out.println("Called getGene(), geneId is: " + geneId + ", refId is: " + refId);
+
         if (refId == null) {
+            // Haven't created Gene yet, create it now and store ref
             String taxonId = holder.getTaxonId();
             String identiferType = config.get(taxonId);
             if (StringUtils.isEmpty(identiferType)) {
                 identiferType = DEFAULT_IDENTIFIER_TYPE;
             }
             Item gene = createItem("Gene");
-            gene.setAttribute(identiferType, holder.getIdentifier());
+            gene.setAttribute(identiferType, geneId);
 	    /*
             if("9913".equals(taxonId) || "9940".equals(taxonId) || "9925".equals(taxonId)){
                 gene.setAttribute("source", version);
@@ -347,35 +433,42 @@ public class OrthodbConverter extends BioFileConverter
 	    gene.setAttribute("source", this.geneSource);
             gene.setReference("organism", getOrganism(taxonId));
             refId = gene.getIdentifier();
-            holder.setRefId(refId);
+            geneIdToRef.put(geneId, refId);
             store(gene);
+            //System.out.println("refId was null, so creating new Gene item with identifier: " + holder.getIdentifier() + ", organism taxon ID: " + taxonId + ", refId: " + refId + ", identifierTyoe: " + identiferType); 
         }
+        //else { System.out.println("we have seen the gene " + holder.getIdentifier() + " before, it has refId: " + refId); }
         return refId;
     }
 
-    private static String getTaxon(String speciesString) {
-        /* could be a long string like this or just the name. check for both
-         Bacillus cereus E33L species:288681;genus:1386:Bacillus;family:186817:Bacillaceae;order:
-         1385:Bacillales;class:91061:Bacilli;phylum:1239:Firmicutes
-         */
-        if (speciesString.contains(":")) {
-            String[] firstSplit = speciesString.split(":");
-            if (firstSplit == null || firstSplit.length < 2) {
-                return null;
-            }
-            String[] secondSplit = firstSplit[1].split(";");
-            return secondSplit[0];
-        }
-        String[] split = speciesString.split(" ");
-        if (split == null || split.length != 2) {
-            return null;
-        }
-        OrganismData od = OR.getOrganismDataByGenusSpecies(split[0], split[1]);
-        if (od == null) {
-            return null;
-        }
-        return String.valueOf(od.getTaxonId());
-    }
+    /*
+     * This function should no longer be needed
+     * Note that lookup by genus+species file is incomplete
+     * (e.g., missing taxon ID 89462)
+     */ 
+    //private static String getTaxon(String speciesString) {
+    //    /* could be a long string like this or just the name. check for both
+    //     Bacillus cereus E33L species:288681;genus:1386:Bacillus;family:186817:Bacillaceae;order:
+    //     1385:Bacillales;class:91061:Bacilli;phylum:1239:Firmicutes
+    //     */
+    //    if (speciesString.contains(":")) {
+    //        String[] firstSplit = speciesString.split(":");
+    //        if (firstSplit == null || firstSplit.length < 2) {
+    //            return null;
+    //        }
+    //        String[] secondSplit = firstSplit[1].split(";");
+    //        return secondSplit[0];
+    //    }
+    //    String[] split = speciesString.split(" ");
+    //    if (split == null || split.length != 2) {
+    //        return null;
+    //    }
+    //    OrganismData od = OR.getOrganismDataByGenusSpecies(split[0], split[1]);
+    //    if (od == null) {
+    //        return null;
+    //    }
+    //    return String.valueOf(od.getTaxonId());
+    //}
 
     private String getEvidence() throws ObjectStoreException {
         if (evidenceRefId == null) {
@@ -402,38 +495,46 @@ public class OrthodbConverter extends BioFileConverter
         return evidenceRefId;
     }
 
-    private void createIDResolver() {
-        Set<String> allTaxonIds = new HashSet<String>();
-        allTaxonIds.addAll(taxonIds);
-        allTaxonIds.addAll(homologueTaxonIds);
-        if (rslv == null) {
-            rslv = IdResolverService.getIdResolverByOrganism(allTaxonIds);
-        }
-        LOG.info("Taxons in resolver:" + rslv.getTaxons());
-    }
+    /*
+     * This function should no longer be needed
+     */  
+    //private void createIDResolver() {
+    //    Set<String> allTaxonIds = new HashSet<String>();
+    //    allTaxonIds.addAll(taxonIds);
+    //    allTaxonIds.addAll(homologueTaxonIds);
+    //    if (rslv == null) {
+    //        rslv = IdResolverService.getIdResolverByOrganism(allTaxonIds);
+    //    }
+    //    System.out.println("Taxons in resolver:" + rslv.getTaxons());
+    //}
 
-    private String resolveGene(String identifier, String taxonId) {
-        if (rslv == null || !rslv.hasTaxon(taxonId)) {
-            // no id resolver available, so return the original identifier
-            return identifier;
-        }
-        int resCount = rslv.countResolutions(taxonId, identifier);
-        if (resCount != 1) {
-            LOG.info("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
-                     + identifier + " count: " + resCount + " Resolved: "
-                     + rslv.resolveId(taxonId, identifier));
-            return null;
-        }
-        return rslv.resolveId(taxonId, identifier).iterator().next();
-    }
+    /*
+     * This function should no longer be needed
+     */
+    //private String resolveGene(String identifier, String taxonId) {
+    //    if (rslv == null || !rslv.hasTaxon(taxonId)) {
+    //        // no id resolver available, so return the original identifier
+    //        System.out.println("No resolver available for gene: " + identifier);
+    //        return identifier;
+    //    }
+    //    int resCount = rslv.countResolutions(taxonId, identifier);
+    //    if (resCount != 1) {
+    //        System.out.println("RESOLVER: failed to resolve gene to one identifier, ignoring gene: "
+    //                 + identifier + " count: " + resCount + " Resolved: "
+    //                 + rslv.resolveId(taxonId, identifier));
+    //        return null;
+    //    }
+    //    return rslv.resolveId(taxonId, identifier).iterator().next();
+    //}
 
+    // Class that keeps track of gene info and corresponding homologue info (cluster ID and LCA)
+    // Keeping name as "GeneHolder" but it's really holding homologue info from one line of the OrthoDB file
     private class GeneHolder
     {
-        private String identifier;
-        private String taxonId;
-        private String refId;
-	private String clusterId;
-	private String lastCommonAncestor;
+        private String identifier;          // gene identifier
+        private String taxonId;             // gene taxon ID
+	private String clusterId;           // cluster ID for this homologue entry
+	private String lastCommonAncestor;  // LCA for this homologue entry
 
         protected GeneHolder(String identifier, String taxonId, String clusterId, String lastCommonAncestor) {
             this.identifier = identifier;
@@ -456,12 +557,21 @@ public class OrthodbConverter extends BioFileConverter
             return identifier;
         }
 
-        protected String getRefId() {
-            return refId;
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof GeneHolder) {
+                GeneHolder gh = (GeneHolder) obj;
+                return identifier.equals(gh.identifier)
+                    && taxonId.equals(gh.taxonId)
+                    && clusterId.equals(gh.clusterId)
+                    && lastCommonAncestor.equals(gh.lastCommonAncestor);
+            }
+            return false;
         }
 
-        protected void setRefId(String refId) {
-            this.refId = refId;
+        @Override
+        public String toString() {
+            return "(" + identifier + ", " + taxonId + ", " + clusterId + ", " + lastCommonAncestor + ")";
         }
     }
 }
