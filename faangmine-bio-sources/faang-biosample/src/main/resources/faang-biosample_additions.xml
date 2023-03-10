@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!-- This file details any extensions needed to the data model to store data from this source, everything else is automatically generated from the model description so this is all we need to do to add to the model. -->
+
+<classes>
+  <class name="BioSample" is-interface="true">
+    <attribute name="bioSampleId" type="java.lang.String"/>
+    <attribute name="animalAgeAtCollection" type="java.lang.String"/>
+    <attribute name="bioSampleType" type="java.lang.String"/>
+    <attribute name="breed" type="java.lang.String"/>
+    <attribute name="breedLboId" type="java.lang.String"/>
+    <attribute name="breedOrphanetId" type="java.lang.String"/>
+    <attribute name="btoId" type="java.lang.String"/>
+    <attribute name="btoName" type="java.lang.String"/>
+    <attribute name="cellType" type="java.lang.String"/>
+    <attribute name="cellTypeClId" type="java.lang.String"/>
+    <attribute name="chipAntibody" type="java.lang.String"/>
+    <attribute name="description" type="java.lang.String"/>
+    <attribute name="descriptionUberonId" type="java.lang.String"/>
+    <attribute name="developmentalStage" type="java.lang.String"/>
+    <attribute name="developmentalStageEfoId" type="java.lang.String"/>
+    <attribute name="developmentalStageHsapdvId" type="java.lang.String"/>
+    <attribute name="developmentalStageUberonId" type="java.lang.String"/>
+    <attribute name="environmentalConditions" type="java.lang.String"/>
+    <attribute name="environmentalConditionsOwleolId" type="java.lang.String"/>
+    <attribute name="fastedStatus" type="java.lang.String"/>
+    <attribute name="gestationalAgeAtSampleCollection" type="java.lang.String"/>
+    <attribute name="healthStatusAtCollection" type="java.lang.String"/>
+    <attribute name="healthStatusAtCollectionHpId" type="java.lang.String"/>
+    <attribute name="healthStatusAtCollectionMondoId" type="java.lang.String"/>
+    <attribute name="healthStatusAtCollectionOrphanetId" type="java.lang.String"/>
+    <attribute name="healthStatusAtCollectionPatoId" type="java.lang.String"/>
+    <attribute name="markers" type="java.lang.String"/>
+    <attribute name="material" type="java.lang.String"/>
+    <attribute name="materialObiId" type="java.lang.String"/>
+    <attribute name="name" type="java.lang.String"/>
+    <attribute name="organismName" type="java.lang.String"/>
+    <attribute name="organismPart" type="java.lang.String"/>
+    <attribute name="organismPartUberonId" type="java.lang.String"/>
+    <attribute name="organismPartUberonName" type="java.lang.String"/>
+    <attribute name="physiologicalCondition" type="java.lang.String"/>
+    <attribute name="physiologicalConditionOwlatolId" type="java.lang.String"/>
+    <attribute name="physiologicalConditions" type="java.lang.String"/>
+    <attribute name="project" type="java.lang.String"/>
+    <attribute name="releaseDate" type="java.util.Date"/>
+    <attribute name="sampleName" type="java.lang.String"/>
+    <attribute name="secondaryProject" type="java.lang.String"/>
+    <attribute name="sex" type="java.lang.String"/>
+    <attribute name="specimenCollectionDate" type="java.util.Date"/>
+    <attribute name="specimenTag" type="java.lang.String"/>
+    <attribute name="strain" type="java.lang.String"/>
+    <attribute name="submissionDescription" type="java.lang.String"/>
+    <attribute name="submissionTitle" type="java.lang.String"/>
+    <attribute name="submitterId" type="java.lang.String"/>
+    <attribute name="synonym" type="java.lang.String"/>
+    <attribute name="updateDate" type="java.util.Date"/>
+    <reference name="animalTraitOntologyForLivestock" referenced-type="ATOLTerm" reverse-reference="samples"/>
+    <reference name="brendaTissueOntology" referenced-type="BTOTerm" reverse-reference="samples"/>
+    <reference name="cellOntology" referenced-type="CLTerm" reverse-reference="samples"/>
+    <reference name="environmentOntologyForLivestock" referenced-type="EOLTerm" reverse-reference="samples"/>
+    <reference name="experimentalFactorOntology" referenced-type="EFOTerm" reverse-reference="samples"/>
+    <reference name="humanDevelopmentalStagesOntology" referenced-type="HsapDvTerm" reverse-reference="samples"/>
+    <reference name="humanPhenotypeOntology" referenced-type="HPTerm" reverse-reference="samples"/>
+    <reference name="livestockBreedOntology" referenced-type="LBOTerm" reverse-reference="samples"/>
+    <reference name="mondoDiseaseOntology" referenced-type="MONDOTerm" reverse-reference="samples"/>
+    <reference name="ontologyForBiomedicalInvestigations" referenced-type="OBITerm" reverse-reference="samples"/>
+    <reference name="phenotypeAndTraitOntology" referenced-type="PATOTerm" reverse-reference="samples"/>
+    <reference name="organism" referenced-type="Organism"/>
+    <reference name="purificationProtocol" referenced-type="Protocol"/>
+    <reference name="specimenCollectionProtocol" referenced-type="Protocol"/>
+    <collection name="bioSamplePools" referenced-type="BioSample" reverse-reference="componentSampleIds"/>
+    <collection name="componentSampleIds" referenced-type="BioSample" reverse-reference="bioSamplePools"/>
+    <collection name="dataSets" referenced-type="DataSet"/>
+    <collection name="orphanetRareDiseaseOntology" referenced-type="OrphanetTerm" reverse-reference="samples"/>
+    <collection name="uberAnatomyOntology" referenced-type="UBERONTerm" reverse-reference="samples"/>
+  </class>
+  <class name="ATOLTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="animalTraitOntologyForLivestock"/>
+  </class>
+  <class name="BTOTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="brendaTissueOntology"/>
+  </class>
+  <class name="CLTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="cellOntology"/>
+  </class>
+  <class name="EFOTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="experimentalFactorOntology"/>
+  </class>
+  <class name="EOLTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="environmentOntologyForLivestock"/>
+  </class>
+  <class name="HPTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="humanPhenotypeOntology"/>
+  </class>
+  <class name="HsapDvTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="humanDevelopmentalStagesOntology"/>
+  </class>
+  <class name="LBOTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="livestockBreedOntology"/>
+  </class>
+  <class name="MONDOTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="mondoDiseaseOntology"/>
+  </class>
+  <class name="OBITerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="ontologyForBiomedicalInvestigations"/>
+  </class>
+  <class name="OrphanetTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="orphanetRareDiseaseOntology"/>
+  </class>
+  <class name="PATOTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="phenotypeAndTraitOntology"/>
+  </class>
+  <class name="UBERONTerm" extends="OntologyTerm" is-interface="true">
+    <collection name="samples" referenced-type="BioSample" reverse-reference="uberAnatomyOntology"/>
+  </class>
+  <class name="Protocol" is-interface="true">
+    <attribute name="name" type="java.lang.String"/>
+    <attribute name="url" type="java.lang.String"/>
+  </class>
+</classes>

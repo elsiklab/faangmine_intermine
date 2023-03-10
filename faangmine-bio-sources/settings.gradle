@@ -1,0 +1,71 @@
+rootProject.name = 'bio-sources'
+include ':bio-source-animal-trait-ontology-for-livestock'
+project(':bio-source-animal-trait-ontology-for-livestock').projectDir = new File(settingsDir, './animal-trait-ontology-for-livestock')
+include ':bio-source-brenda-tissue-ontology'
+project(':bio-source-brenda-tissue-ontology').projectDir = new File(settingsDir, './brenda-tissue-ontology')
+include ':bio-source-cell-ontology'
+project(':bio-source-cell-ontology').projectDir = new File(settingsDir, './cell-ontology')
+include ':bio-source-clinical-measurement-ontology'
+project(':bio-source-clinical-measurement-ontology').projectDir = new File(settingsDir, './clinical-measurement-ontology')
+include ':bio-source-environment-ontology-for-livestock'
+project(':bio-source-environment-ontology-for-livestock').projectDir = new File(settingsDir, './environment-ontology-for-livestock')
+include ':bio-source-evidence-ontology'
+project(':bio-source-evidence-ontology').projectDir = new File(settingsDir, './evidence-ontology')
+include ':bio-source-experimental-factor-ontology'
+project(':bio-source-experimental-factor-ontology').projectDir = new File(settingsDir, './experimental-factor-ontology')
+include ':bio-source-human-developmental-stage-ontology'
+project(':bio-source-human-developmental-stage-ontology').projectDir = new File(settingsDir, './human-developmental-stage-ontology')
+include ':bio-source-human-phenotype-ontology'
+project(':bio-source-human-phenotype-ontology').projectDir = new File(settingsDir, './human-phenotype-ontology')
+include ':bio-source-livestock-breed-ontology'
+project(':bio-source-livestock-breed-ontology').projectDir = new File(settingsDir, './livestock-breed-ontology')
+include ':bio-source-livestock-product-trait-ontology'
+project(':bio-source-livestock-product-trait-ontology').projectDir = new File(settingsDir, './livestock-product-trait-ontology')
+include ':bio-source-mondo-disease-ontology'
+project(':bio-source-mondo-disease-ontology').projectDir = new File(settingsDir, './mondo-disease-ontology')
+include ':bio-source-mouse-adult-gross-anatomy-ontology'
+project(':bio-source-mouse-adult-gross-anatomy-ontology').projectDir = new File(settingsDir, './mouse-adult-gross-anatomy-ontology')
+include ':bio-source-ontology-for-biomedical-investigations'
+project(':bio-source-ontology-for-biomedical-investigations').projectDir = new File(settingsDir, './ontology-for-biomedical-investigations')
+include ':bio-source-orphanet-rare-disease-ontology'
+project(':bio-source-orphanet-rare-disease-ontology').projectDir = new File(settingsDir, './orphanet-rare-disease-ontology')
+include ':bio-source-phenotype-and-trait-ontology'
+project(':bio-source-phenotype-and-trait-ontology').projectDir = new File(settingsDir, './phenotype-and-trait-ontology')
+include ':bio-source-uber-anatomy-ontology'
+project(':bio-source-uber-anatomy-ontology').projectDir = new File(settingsDir, './uber-anatomy-ontology')
+include ':bio-source-vertebrate-trait-ontology'
+project(':bio-source-vertebrate-trait-ontology').projectDir = new File(settingsDir, './vertebrate-trait-ontology')
+include ':bio-source-fasta-assembly'
+project(':bio-source-fasta-assembly').projectDir = new File(settingsDir, './fasta-assembly')
+include ':bio-source-snp-variation'
+project(':bio-source-snp-variation').projectDir = new File(settingsDir, './snp-variation')
+include ':bio-source-refseq-gff'
+project(':bio-source-refseq-gff').projectDir = new File(settingsDir, './refseq-gff')
+include ':bio-source-pseudogene-refseq-gff'
+project(':bio-source-pseudogene-refseq-gff').projectDir = new File(settingsDir, './pseudogene-refseq-gff')
+include ':bio-source-pseudogene-refseq-nottranscribed-gff'
+project(':bio-source-pseudogene-refseq-nottranscribed-gff').projectDir = new File(settingsDir, './pseudogene-refseq-nottranscribed-gff')
+include ':bio-source-ensembl-gff'
+project(':bio-source-ensembl-gff').projectDir = new File(settingsDir, './ensembl-gff')
+include ':bio-source-pseudogene-ensembl-gff'
+project(':bio-source-pseudogene-ensembl-gff').projectDir = new File(settingsDir, './pseudogene-ensembl-gff')
+include ':bio-source-faang-gff'
+project(':bio-source-faang-gff').projectDir = new File(settingsDir, './faang-gff')
+include ':bio-source-qtl-gff'
+project(':bio-source-qtl-gff').projectDir = new File(settingsDir, './qtl-gff')
+include ':bio-source-faang-bioproject'
+project(':bio-source-faang-bioproject').projectDir = new File(settingsDir, './faang-bioproject')
+include ':bio-source-faang-biosample'
+project(':bio-source-faang-biosample').projectDir = new File(settingsDir, './faang-biosample')
+include ':bio-source-faang-analysis'
+project(':bio-source-faang-analysis').projectDir = new File(settingsDir, './faang-analysis')
+include ':bio-source-faang-experiment'
+project(':bio-source-faang-experiment').projectDir = new File(settingsDir, './faang-experiment')
+include ':bio-source-faang-expression'
+project(':bio-source-faang-expression').projectDir = new File(settingsDir, './faang-expression')
+include ':bio-source-cross-references'
+project(':bio-source-cross-references').projectDir = new File(settingsDir, './cross-references')
+include ':bio-source-custom-gene-info'
+project(':bio-source-custom-gene-info').projectDir = new File(settingsDir, './custom-gene-info')
+include ':bio-source-orthodb-clusters'
+project(':bio-source-orthodb-clusters').projectDir = new File(settingsDir, './orthodb-clusters')

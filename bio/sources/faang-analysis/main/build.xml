@@ -1,4 +1,0 @@
-<project name="faang-analsis-tasks" default="default" basedir=".">
-  <description>build faang-analysis tasks</description>
-  <import file="../../../../imbuild/library.xml"/> 
-</project>

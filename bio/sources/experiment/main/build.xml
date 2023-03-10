@@ -1,4 +1,0 @@
-<project name="experiment-tasks" default="default" basedir=".">
-  <description>build experiment tasks</description>
-  <import file="../../../../imbuild/library.xml"/> 
-</project>
